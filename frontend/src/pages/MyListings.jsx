@@ -93,8 +93,8 @@ const MyListings = () => {
                                             <p className="text-slate-500">{car.title}</p>
                                         </div>
                                         <span className={`px-3 py-1 rounded-full text-xs font-bold ${car.statusName === 'Available'
-                                                ? 'bg-green-100 text-green-700'
-                                                : 'bg-slate-200 text-slate-700'
+                                            ? 'bg-green-100 text-green-700'
+                                            : 'bg-slate-200 text-slate-700'
                                             }`}>
                                             {car.statusName}
                                         </span>
@@ -137,20 +137,24 @@ const MyListings = () => {
                                             >
                                                 View
                                             </Link>
-                                            <button
-                                                onClick={() => handleEdit(car.carId)}
-                                                className="px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-colors font-medium flex items-center gap-2"
-                                            >
-                                                <Edit size={16} />
-                                                Edit
-                                            </button>
-                                            <button
-                                                onClick={() => handleDelete(car.carId, `${car.brandName} ${car.model}`)}
-                                                className="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors font-medium flex items-center gap-2"
-                                            >
-                                                <Trash2 size={16} />
-                                                Delete
-                                            </button>
+                                            {car.statusName !== 'Sold' && (
+                                                <button
+                                                    onClick={() => handleEdit(car.carId)}
+                                                    className="px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-colors font-medium flex items-center gap-2"
+                                                >
+                                                    <Edit size={16} />
+                                                    Edit
+                                                </button>
+                                            )}
+                                            {car.statusName !== 'Sold' && (
+                                                <button
+                                                    onClick={() => handleDelete(car.carId, `${car.brandName} ${car.model}`)}
+                                                    className="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors font-medium flex items-center gap-2"
+                                                >
+                                                    <Trash2 size={16} />
+                                                    Delete
+                                                </button>
+                                            )}
                                         </div>
                                     </div>
                                 </div>

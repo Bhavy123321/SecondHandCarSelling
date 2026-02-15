@@ -12,8 +12,11 @@ const CarDetails = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const isOwner = user && car && user.userId === car.userId;
-    const canBuy = user && car && user.userId !== car.userId && car.statusName === 'Available';
+    const isOwner = user && car && user.userId == car.userId;
+    // Buyers can buy if they don't own the car, it's available, and they are not an Admin
+    const canBuy = user && car && user.userId != car.userId && car.statusName === 'Available' && user.role !== 'Admin';
+
+
 
     const handleDelete = async () => {
         if (!window.confirm(`Are you sure you want to delete this car listing?`)) return;
@@ -146,6 +149,17 @@ const CarDetails = () => {
                                 ${car.price?.toLocaleString()}
                             </div>
                             {/* Action Buttons */}
+                            {isOwner && (
+                                <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/30 border border-blue-100 dark:border-blue-800 rounded-xl flex items-center gap-3">
+                                    <div className="size-10 bg-blue-100 dark:bg-blue-800 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-300">
+                                        <User size={20} />
+                                    </div>
+                                    <div>
+                                        <p className="font-bold text-blue-900 dark:text-blue-100">Your Listing</p>
+                                        <p className="text-sm text-blue-700 dark:text-blue-300">You are the seller of this vehicle.</p>
+                                    </div>
+                                </div>
+                            )}
                             {canBuy && (
                                 <button
                                     onClick={() => navigate(`/buy/${car.carId}`)}
@@ -157,20 +171,24 @@ const CarDetails = () => {
                             )}
                             {isOwner && (
                                 <div className="space-y-3 mt-6">
-                                    <button
-                                        onClick={() => navigate(`/edit-car/${car.carId}`)}
-                                        className="w-full bg-blue-500 text-white font-bold py-3 rounded-xl hover:bg-blue-600 transition-all flex items-center justify-center gap-2"
-                                    >
-                                        <Edit size={18} />
-                                        Edit Listing
-                                    </button>
-                                    <button
-                                        onClick={handleDelete}
-                                        className="w-full bg-red-500 text-white font-bold py-3 rounded-xl hover:bg-red-600 transition-all flex items-center justify-center gap-2"
-                                    >
-                                        <Trash2 size={18} />
-                                        Delete Listing
-                                    </button>
+                                    {car.statusName !== 'Sold' && (
+                                        <button
+                                            onClick={() => navigate(`/edit-car/${car.carId}`)}
+                                            className="w-full bg-blue-500 text-white font-bold py-3 rounded-xl hover:bg-blue-600 transition-all flex items-center justify-center gap-2"
+                                        >
+                                            <Edit size={18} />
+                                            Edit Listing
+                                        </button>
+                                    )}
+                                    {car.statusName !== 'Sold' && (
+                                        <button
+                                            onClick={handleDelete}
+                                            className="w-full bg-red-500 text-white font-bold py-3 rounded-xl hover:bg-red-600 transition-all flex items-center justify-center gap-2"
+                                        >
+                                            <Trash2 size={18} />
+                                            Delete Listing
+                                        </button>
+                                    )}
                                 </div>
                             )}
                             {!canBuy && !isOwner && car.statusName === 'Sold' && (

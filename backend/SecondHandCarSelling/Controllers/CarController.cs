@@ -32,6 +32,7 @@ namespace SecondHandCarSellingAPI.Controllers
                 .Select(c => new CarResponseDTO
                 {
                     CarId = c.CarId,
+                    UserId = c.UserId,
                     Title = c.Title,
                     Model = c.Model,
                     Year = c.Year,
@@ -66,6 +67,7 @@ namespace SecondHandCarSellingAPI.Controllers
                 .Select(c => new CarResponseDTO
                 {
                     CarId = c.CarId,
+                    UserId = c.UserId,
                     Title = c.Title,
                     Model = c.Model,
                     Year = c.Year,
@@ -85,6 +87,35 @@ namespace SecondHandCarSellingAPI.Controllers
             if (car == null)
                 return NotFound(new { message = "Car Not Found" });
 
+            // Visibility Logic for Sold Cars
+            if (car.StatusName == "Sold")
+            {
+                // If user is not authenticated, they can't see sold cars
+                if (User.Identity == null || !User.Identity.IsAuthenticated)
+                    return NotFound(new { message = "Car Not Found (Sold)" }); // Return 404 to hide existence
+
+                // Get current user ID from claims
+                var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId");
+                if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int currentUserId))
+                     return NotFound(new { message = "Car Not Found" });
+
+                var userRole = User.Claims.FirstOrDefault(c => c.Type == "Role")?.Value;
+
+                // 1. Admin can see everything
+                if (userRole == "Admin") return Ok(car);
+
+                // 2. Seller (Owner) can see their own sold car
+                var isOwner = await _context.Car.AnyAsync(c => c.CarId == id && c.UserId == currentUserId);
+                if (isOwner) return Ok(car);
+
+                // 3. Buyer can see the car they bought
+                var isBuyer = await _context.Purchase.AnyAsync(p => p.CarId == id && p.UserId == currentUserId);
+                if (isBuyer) return Ok(car);
+
+                // If none of the above, hide it
+                return NotFound(new { message = "Car Not Found (Sold)" });
+            }
+
             return Ok(car);
         }
 
@@ -103,6 +134,7 @@ namespace SecondHandCarSellingAPI.Controllers
                 .Select(c => new CarResponseDTO
                 {
                     CarId = c.CarId,
+                    UserId = c.UserId,
                     Title = c.Title,
                     Model = c.Model,
                     Year = c.Year,
@@ -137,6 +169,7 @@ namespace SecondHandCarSellingAPI.Controllers
                 .Select(c => new CarResponseDTO
                 {
                     CarId = c.CarId,
+                    UserId = c.UserId,
                     Title = c.Title,
                     Model = c.Model,
                     Year = c.Year,

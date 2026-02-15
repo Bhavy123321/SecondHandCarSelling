@@ -74,6 +74,7 @@ namespace SecondHandCarSellingAPI.Models
     public class CarResponseDTO
     {
         public int CarId { get; set; }
+        public int UserId { get; set; } // Added for frontend validation
         public int ImageId { get; set; }
         public string Title { get; set; }
         public string Model { get; set; }
