@@ -3,7 +3,147 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --background: 210 40% 98%;
+    /* powder-blue-50 */
+    --foreground: 222 47% 11%;
+    /* lavender-grey-950 */
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 240 100% 50%;
+    /* lavender-500 */
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 240 100% 50%;
+
+    --radius: 0.5rem;
+
+    /* Custom Palette Variables */
+    /* Lavender */
+    --color-lavender-50: 240 100% 95%;
+    --color-lavender-100: 240 100% 90%;
+    --color-lavender-200: 240 100% 80%;
+    --color-lavender-300: 240 100% 70%;
+    --color-lavender-400: 240 100% 60%;
+    --color-lavender-500: 240 100% 50%;
+    --color-lavender-600: 240 100% 40%;
+    --color-lavender-700: 240 100% 30%;
+    --color-lavender-800: 240 100% 20%;
+    --color-lavender-900: 240 100% 10%;
+    --color-lavender-950: 240 100% 7%;
+
+    /* Lavender Grey */
+    --color-lavender-grey-50: 250 20% 95%;
+    --color-lavender-grey-100: 245 20% 90%;
+    --color-lavender-grey-200: 242 20% 80%;
+    --color-lavender-grey-300: 242 20% 70%;
+    --color-lavender-grey-400: 242 20% 60%;
+    --color-lavender-grey-500: 242 25% 50%;
+    --color-lavender-grey-600: 242 25% 40%;
+    --color-lavender-grey-700: 242 25% 30%;
+    --color-lavender-grey-800: 242 23% 20%;
+    --color-lavender-grey-900: 242 23% 10%;
+    --color-lavender-grey-950: 240 22% 7%;
+
+    /* Powder Blue */
+    --color-powder-blue-50: 210 40% 95%;
+    --color-powder-blue-100: 210 30% 90%;
+    --color-powder-blue-200: 210 30% 80%;
+    --color-powder-blue-300: 210 30% 70%;
+    --color-powder-blue-400: 210 30% 60%;
+    --color-powder-blue-500: 210 30% 50%;
+    --color-powder-blue-600: 210 30% 40%;
+    --color-powder-blue-700: 210 30% 30%;
+    --color-powder-blue-800: 210 30% 20%;
+    --color-powder-blue-900: 210 30% 10%;
+    --color-powder-blue-950: 210 30% 7%;
+
+    /* Baltic Blue */
+    --color-baltic-blue-50: 205 50% 95%;
+    --color-baltic-blue-100: 205 50% 90%;
+    --color-baltic-blue-200: 205 50% 80%;
+    --color-baltic-blue-300: 205 50% 70%;
+    --color-baltic-blue-400: 205 50% 60%;
+    --color-baltic-blue-500: 205 50% 50%;
+    --color-baltic-blue-600: 205 50% 40%;
+    --color-baltic-blue-700: 205 50% 30%;
+    --color-baltic-blue-800: 205 50% 20%;
+    --color-baltic-blue-900: 205 50% 10%;
+    --color-baltic-blue-950: 205 50% 7%;
+
+    /* Muted Teal */
+    --color-muted-teal-50: 100 20% 95%;
+    --color-muted-teal-100: 100 20% 90%;
+    --color-muted-teal-200: 100 20% 80%;
+    --color-muted-teal-300: 100 20% 70%;
+    --color-muted-teal-400: 100 20% 60%;
+    --color-muted-teal-500: 100 20% 50%;
+    --color-muted-teal-600: 100 20% 40%;
+    --color-muted-teal-700: 100 20% 30%;
+    --color-muted-teal-800: 100 20% 20%;
+    --color-muted-teal-900: 100 20% 10%;
+    --color-muted-teal-950: 100 20% 7%;
+  }
+
+  .dark {
+    --background: 240 22% 7%;
+    /* lavender-grey-950 */
+    --foreground: 210 40% 98%;
+
+    --card: 242 23% 10%;
+    /* lavender-grey-900 */
+    --card-foreground: 210 40% 98%;
+
+    --popover: 242 23% 10%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 240 100% 60%;
+    /* lavender-400 */
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 240 100% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
   body {
-    @apply antialiased;
+    @apply bg-background text-foreground;
   }
 }

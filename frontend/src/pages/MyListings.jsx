@@ -1,178 +1,207 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import api from '../services/api';
-import { Edit, Trash2, Car as CarIcon, DollarSign, Calendar, User } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import api from "../services/api";
+import { Edit, Trash2, Plus, Eye, MoreHorizontal } from "lucide-react";
+import { Button } from "../components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../components/ui/table";
+import { Badge } from "../components/ui/badge";
+import { Skeleton } from "../components/ui/skeleton";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardDescription,
+} from "../components/ui/card";
 
 const MyListings = () => {
-    const [listings, setListings] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const navigate = useNavigate();
+  const [listings, setListings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-    const fetchListings = async () => {
-        try {
-            setLoading(true);
-            setError(null);
-            const user = JSON.parse(localStorage.getItem('user'));
-            const response = await api.get(`/Car/seller/${user.userId}`);
-            setListings(response.data);
-        } catch (error) {
-            console.error('Error fetching listings', error);
-            setError('Failed to load your listings');
-        } finally {
-            setLoading(false);
-        }
-    };
+  const fetchListings = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const user = JSON.parse(localStorage.getItem("user"));
+      const response = await api.get(`/Car/seller/${user.userId}`);
+      setListings(response.data);
+    } catch (error) {
+      console.error("Error fetching listings", error);
+      setError("Failed to load your listings");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    useEffect(() => {
-        fetchListings();
-    }, []);
+  useEffect(() => {
+    fetchListings();
+  }, []);
 
-    const handleDelete = async (carId, carTitle) => {
-        if (!window.confirm(`Are you sure you want to delete "${carTitle}"?`)) return;
+  const handleDelete = async (carId, carTitle) => {
+    if (!window.confirm(`Are you sure you want to delete "${carTitle}"?`))
+      return;
 
-        try {
-            await api.delete(`/Car/${carId}`);
-            setListings(listings.filter(car => car.carId !== carId));
-        } catch (error) {
-            console.error('Error deleting car', error);
-            alert('Failed to delete car');
-        }
-    };
+    try {
+      await api.delete(`/Car/${carId}`);
+      setListings(listings.filter((car) => car.carId !== carId));
+    } catch (error) {
+      console.error("Error deleting car", error);
+      alert("Failed to delete car");
+    }
+  };
 
-    const handleEdit = (carId) => {
-        navigate(`/edit-car/${carId}`);
-    };
-
-    if (loading) return (
-        <div className="flex justify-center items-center min-h-[60vh]">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-        </div>
-    );
-
-    if (error) return (
-        <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-            <p className="text-red-500">{error}</p>
-            <button onClick={fetchListings} className="px-6 py-3 bg-primary text-white rounded-xl font-bold hover:bg-primary/90">
-                Retry
-            </button>
-        </div>
-    );
-
+  if (error)
     return (
-        <div className="py-8">
-            <div className="mb-8 flex items-center justify-between">
-                <div>
-                    <h1 className="text-3xl font-black">My Listings</h1>
-                    <p className="text-slate-500 mt-1">Manage your car listings</p>
-                </div>
-                <Link to="/sell" className="px-6 py-3 bg-primary text-white rounded-xl font-bold hover:bg-primary/90">
-                    + Add New Car
-                </Link>
-            </div>
-
-            {listings.length > 0 ? (
-                <div className="grid grid-cols-1 gap-6">
-                    {listings.map(car => (
-                        <div key={car.carId} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden hover:shadow-lg transition-shadow">
-                            <div className="flex flex-col md:flex-row">
-                                {/* Car Image */}
-                                <div className="md:w-64 h-48 md:h-auto bg-slate-200 dark:bg-slate-800 flex items-center justify-center">
-                                    {car.imageUrl ? (
-                                        <img src={car.imageUrl} alt={car.title} className="w-full h-full object-cover" />
-                                    ) : (
-                                        <CarIcon size={48} className="text-slate-400" />
-                                    )}
-                                </div>
-
-                                {/* Car Details */}
-                                <div className="flex-1 p-6">
-                                    <div className="flex items-start justify-between mb-4">
-                                        <div>
-                                            <h3 className="text-2xl font-black">{car.brandName} {car.model}</h3>
-                                            <p className="text-slate-500">{car.title}</p>
-                                        </div>
-                                        <span className={`px-3 py-1 rounded-full text-xs font-bold ${car.statusName === 'Available'
-                                            ? 'bg-green-100 text-green-700'
-                                            : 'bg-slate-200 text-slate-700'
-                                            }`}>
-                                            {car.statusName}
-                                        </span>
-                                    </div>
-
-                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                                        <div>
-                                            <p className="text-xs text-slate-500">Year</p>
-                                            <p className="font-bold">{car.year}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-xs text-slate-500">Mileage</p>
-                                            <p className="font-bold">{car.mileage?.toLocaleString()} km</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-xs text-slate-500">Fuel Type</p>
-                                            <p className="font-bold">{car.fuelType}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-xs text-slate-500">Transmission</p>
-                                            <p className="font-bold">{car.transmission}</p>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-800">
-                                        <div>
-                                            <div className="flex items-center gap-2 text-primary mb-1">
-                                                <DollarSign size={20} />
-                                                <span className="text-2xl font-black">{car.price?.toLocaleString()}</span>
-                                            </div>
-                                            <div className="flex items-center gap-1 text-xs text-slate-500">
-                                                <Calendar size={12} />
-                                                Listed {new Date(car.createdDate).toLocaleDateString()}
-                                            </div>
-                                        </div>
-                                        <div className="flex gap-2">
-                                            <Link
-                                                to={`/cars/${car.carId}`}
-                                                className="px-4 py-2 rounded-lg border-2 border-slate-200 dark:border-slate-700 hover:border-primary transition-colors font-medium"
-                                            >
-                                                View
-                                            </Link>
-                                            {car.statusName !== 'Sold' && (
-                                                <button
-                                                    onClick={() => handleEdit(car.carId)}
-                                                    className="px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-colors font-medium flex items-center gap-2"
-                                                >
-                                                    <Edit size={16} />
-                                                    Edit
-                                                </button>
-                                            )}
-                                            {car.statusName !== 'Sold' && (
-                                                <button
-                                                    onClick={() => handleDelete(car.carId, `${car.brandName} ${car.model}`)}
-                                                    className="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors font-medium flex items-center gap-2"
-                                                >
-                                                    <Trash2 size={16} />
-                                                    Delete
-                                                </button>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            ) : (
-                <div className="text-center py-20">
-                    <CarIcon size={64} className="mx-auto text-slate-300 mb-4" />
-                    <p className="text-slate-500 text-lg mb-4">You haven't listed any cars yet</p>
-                    <Link to="/sell" className="inline-block px-6 py-3 bg-primary text-white rounded-xl font-bold hover:bg-primary/90">
-                        List Your First Car
-                    </Link>
-                </div>
-            )}
-        </div>
+      <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
+        <p className="text-destructive font-medium">{error}</p>
+        <Button onClick={fetchListings}>Retry</Button>
+      </div>
     );
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-black tracking-tight">My Listings</h1>
+          <p className="text-muted-foreground">
+            Manage your vehicle sales inventory.
+          </p>
+        </div>
+        <Link to="/sell">
+          <Button className="gap-2">
+            <Plus className="h-4 w-4" /> Add New Car
+          </Button>
+        </Link>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Inventory</CardTitle>
+          <CardDescription>
+            You have {listings.length} vehicle(s) listed.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {loading ? (
+            <div className="space-y-2">
+              <Skeleton className="h-12 w-full" />
+              <Skeleton className="h-12 w-full" />
+              <Skeleton className="h-12 w-full" />
+            </div>
+          ) : listings.length > 0 ? (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[100px]">Image</TableHead>
+                  <TableHead>Car Details</TableHead>
+                  <TableHead>Price</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Date Listed</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {listings.map((car) => (
+                  <TableRow key={car.carId}>
+                    <TableCell>
+                      <div className="h-12 w-20 rounded-md bg-muted overflow-hidden">
+                        {car.imageUrl ? (
+                          <img
+                            src={car.imageUrl}
+                            alt={car.model}
+                            className="h-full w-full object-cover"
+                          />
+                        ) : (
+                          <div className="h-full w-full flex items-center justify-center bg-slate-200 dark:bg-slate-800 text-xs text-muted-foreground">
+                            No Img
+                          </div>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="font-medium">
+                      <div className="flex flex-col">
+                        <span className="font-bold">
+                          {car.brandName} {car.model}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          {car.year} • {car.fuelType}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell>${car.price?.toLocaleString()}</TableCell>
+                    <TableCell>
+                      <Badge
+                        variant={
+                          car.statusName === "Available"
+                            ? "outline"
+                            : "secondary"
+                        }
+                        className={
+                          car.statusName === "Available"
+                            ? "border-primary text-primary"
+                            : ""
+                        }
+                      >
+                        {car.statusName}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {new Date(car.createdDate).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <Link to={`/cars/${car.carId}`}>
+                          <Button variant="ghost" size="icon" title="View">
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                        </Link>
+                        {car.statusName !== "Sold" && (
+                          <>
+                            <Link to={`/edit-car/${car.carId}`}>
+                              <Button variant="ghost" size="icon" title="Edit">
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            </Link>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() =>
+                                handleDelete(
+                                  car.carId,
+                                  `${car.brandName} ${car.model}`,
+                                )
+                              }
+                              className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                              title="Delete"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </>
+                        )}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          ) : (
+            <div className="text-center py-12 text-muted-foreground">
+              No listings found. Start by adding a car!
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
 };
 
 export default MyListings;

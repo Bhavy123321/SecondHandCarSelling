@@ -1,136 +1,105 @@
-import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { useNavigate, Link } from 'react-router-dom';
-import { Mail, Lock, Car } from 'lucide-react';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "../components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "../components/ui/alert";
+import { Car, AlertCircle } from "lucide-react";
 
 const Login = () => {
-    const [userName, setUserName] = useState('');
-    const [password, setPassword] = useState('');
-    const { login } = useAuth();
-    const navigate = useNavigate();
-    const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false);
-    const { user } = useAuth();
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const { login, loading, error } = useAuth(); // Assuming context provides error
+  const navigate = useNavigate();
 
-    // Redirect if already logged in
-    React.useEffect(() => {
-        if (user) {
-            navigate('/');
-        }
-    }, [user, navigate]);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const result = await login(userName, password);
+    if (result.success) {
+      navigate("/");
+    }
+  };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError('');
-        setLoading(true);
-        const result = await login(userName, password);
-        setLoading(false);
-        if (result.success) {
-            navigate('/');
-        } else {
-            setError(result.error || 'Invalid credentials');
-        }
-    };
-
-    return (
-        <div className="flex min-h-screen font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-white">
-            {/* Left Side: Immersive Brand Content (60%) - Hidden on mobile */}
-            <div className="hidden lg:flex lg:w-[60%] relative flex-col justify-between p-12 overflow-hidden bg-slate-900">
-                <div className="absolute inset-0 z-0">
-                    <div className="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/40 to-transparent z-10"></div>
-                    {/* Placeholder for car image */}
-                    <div className="w-full h-full bg-center bg-no-repeat bg-cover opacity-60" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=2070&auto=format&fit=crop')" }}></div>
-                </div>
-
-                <div className="relative z-20 flex items-center gap-3">
-                    <div className="size-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
-                        <Car className="text-white" />
-                    </div>
-                    <h2 className="text-white text-2xl font-black tracking-tight">AutoPremium</h2>
-                </div>
-
-                <div className="relative z-20 max-w-xl">
-                    <h1 className="text-white text-5xl font-black leading-tight tracking-tight mb-6">
-                        Find your next journey in our curated collection.
-                    </h1>
-                    <p className="text-white/80 text-lg font-medium leading-relaxed">
-                        The world's most trusted marketplace for pre-owned luxury vehicles. Experience transparency and performance in every transaction.
-                    </p>
-                </div>
-
-                <div className="relative z-20">
-                    <p className="text-white/40 text-sm font-medium">© 2026 AutoPremium Global Inc.</p>
-                </div>
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
+      <Card className="w-full max-w-md shadow-xl border-t-4 border-t-primary">
+        <CardHeader className="space-y-1 text-center">
+          <div className="flex justify-center mb-4">
+            <div className="size-12 bg-primary rounded-xl flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/25">
+              <Car size={24} />
             </div>
-
-            {/* Right Side: Authentication Form (40%) */}
-            <div className="w-full lg:w-[40%] flex flex-col justify-center items-center px-6 py-12 sm:px-12 bg-white dark:bg-background-dark">
-                <div className="w-full max-w-md space-y-8">
-
-                    <div className="lg:hidden flex justify-center mb-8">
-                        <div className="flex items-center gap-2">
-                            <Car className="text-primary text-3xl" />
-                            <h2 className="text-2xl font-black tracking-tight">AutoPremium</h2>
-                        </div>
-                    </div>
-
-                    <div className="text-center lg:text-left space-y-2">
-                        <h2 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">Welcome back</h2>
-                        <p className="text-slate-500 dark:text-slate-400">Enter your details to access your account.</p>
-                    </div>
-
-                    <form onSubmit={handleSubmit} className="space-y-5">
-                        {error && <div className="p-3 bg-red-100 text-red-600 rounded-lg text-sm">{error}</div>}
-
-                        <div className="space-y-1.5">
-                            <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1" htmlFor="username">Username</label>
-                            <div className="relative">
-                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
-                                <input
-                                    className="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none text-slate-900 dark:text-white"
-                                    id="username"
-                                    type="text"
-                                    placeholder="Enter your username"
-                                    value={userName}
-                                    onChange={(e) => setUserName(e.target.value)}
-                                    required
-                                />
-                            </div>
-                        </div>
-
-                        <div className="space-y-1.5">
-                            <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1" htmlFor="password">Password</label>
-                            <div className="relative">
-                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
-                                <input
-                                    className="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none text-slate-900 dark:text-white"
-                                    id="password"
-                                    type="password"
-                                    placeholder="••••••••"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    required
-                                />
-                            </div>
-                        </div>
-
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="w-full bg-primary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/90 hover:shadow-xl transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            {loading ? 'Signing In...' : 'Sign In to Account'}
-                        </button>
-                    </form>
-
-                    <p className="text-center text-slate-500 dark:text-slate-400 font-medium">
-                        Don't have an account?
-                        <Link to="/register" className="text-primary font-bold hover:underline underline-offset-4 ml-1">Create an account</Link>
-                    </p>
-                </div>
+          </div>
+          <CardTitle className="text-2xl font-bold tracking-tight">
+            Welcome back
+          </CardTitle>
+          <CardDescription>
+            Enter your credentials to access your account
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {error && (
+              <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+            <div className="space-y-2">
+              <Label htmlFor="username">Username</Label>
+              <Input
+                id="username"
+                type="text"
+                placeholder="johndoe"
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+                required
+              />
             </div>
-        </div>
-    );
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password">Password</Label>
+                <Link to="#" className="text-xs text-primary hover:underline">
+                  Forgot password?
+                </Link>
+              </div>
+              <Input
+                id="password"
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Signing in..." : "Sign in"}
+            </Button>
+          </form>
+        </CardContent>
+        <CardFooter className="flex flex-col gap-2 border-t p-6 bg-muted/10">
+          <p className="text-xs text-center text-muted-foreground">
+            Don't have an account?{" "}
+            <Link
+              to="/register"
+              className="text-primary hover:underline font-medium"
+            >
+              Sign up
+            </Link>
+          </p>
+        </CardFooter>
+      </Card>
+    </div>
+  );
 };
 
 export default Login;

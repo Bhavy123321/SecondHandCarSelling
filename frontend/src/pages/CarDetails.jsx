@@ -1,217 +1,301 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import api from '../services/api';
-import { useAuth } from '../context/AuthContext';
-import { Calendar, Gauge, Settings, Fuel, ArrowLeft, User, Phone, Mail, ShoppingCart, Edit, Trash2 } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import api from "../services/api";
+import { useAuth } from "../context/AuthContext";
+import {
+  Calendar,
+  Gauge,
+  Settings,
+  Fuel,
+  ArrowLeft,
+  User,
+  ShoppingCart,
+  Edit,
+  Trash2,
+  Shield,
+  Info,
+} from "lucide-react";
+import { Button } from "../components/ui/button";
+import { Badge } from "../components/ui/badge";
+import { Card, CardContent } from "../components/ui/card";
+import { Skeleton } from "../components/ui/skeleton";
+import { Alert, AlertDescription, AlertTitle } from "../components/ui/alert";
 
 const CarDetails = () => {
-    const { id } = useParams();
-    const navigate = useNavigate();
-    const { user } = useAuth();
-    const [car, setCar] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const [car, setCar] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    const isOwner = user && car && user.userId == car.userId;
-    // Buyers can buy if they don't own the car, it's available, and they are not an Admin
-    const canBuy = user && car && user.userId != car.userId && car.statusName === 'Available' && user.role !== 'Admin';
+  const isOwner = user && car && user.userId == car.userId;
+  const canBuy =
+    user &&
+    car &&
+    user.userId != car.userId &&
+    car.statusName === "Available" &&
+    user.role !== "Admin";
 
+  const handleDelete = async () => {
+    if (!window.confirm(`Are you sure you want to delete this car listing?`))
+      return;
 
+    try {
+      await api.delete(`/Car/${id}`);
+      navigate("/my-listings");
+    } catch (error) {
+      console.error("Error deleting car", error);
+      setError("Failed to delete car. Please try again.");
+    }
+  };
 
-    const handleDelete = async () => {
-        if (!window.confirm(`Are you sure you want to delete this car listing?`)) return;
+  const fetchCar = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await api.get(`/Car/${id}`);
+      setCar(response.data);
+    } catch (error) {
+      console.error("Error fetching car details", error);
+      if (error.response?.status === 404) {
+        setError("Car not found. It may have been sold or removed.");
+      } else {
+        setError("Failed to load car details. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        try {
-            await api.delete(`/Car/${id}`);
-            navigate('/my-listings');
-        } catch (error) {
-            console.error('Error deleting car', error);
-            alert('Failed to delete car');
-        }
-    };
+  useEffect(() => {
+    fetchCar();
+  }, [id]);
 
-    const fetchCar = async () => {
-        try {
-            setLoading(true);
-            setError(null);
-            const response = await api.get(`/Car/${id}`);
-            setCar(response.data);
-        } catch (error) {
-            console.error("Error fetching car details", error);
-            if (error.response?.status === 404) {
-                setError('Car not found. It may have been sold or removed.');
-            } else {
-                setError('Failed to load car details. Please try again.');
-            }
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchCar();
-    }, [id]);
-
-    if (loading) return (
-        <div className="flex justify-center items-center min-h-[60vh]">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-        </div>
-    );
-
-    if (error) return (
-        <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-            <p className="text-red-500 text-center">{error}</p>
-            <div className="flex gap-3">
-                <button
-                    onClick={fetchCar}
-                    className="px-6 py-3 bg-primary text-white rounded-xl font-bold hover:bg-primary/90 transition-colors"
-                >
-                    Retry
-                </button>
-                <button
-                    onClick={() => navigate('/')}
-                    className="px-6 py-3 bg-slate-200 dark:bg-slate-800 rounded-xl font-bold hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors"
-                >
-                    Back to Home
-                </button>
-            </div>
-        </div>
-    );
-
-    if (!car) return <div className="text-center py-20">Car not found.</div>;
-
-    const imageUrl = car.imageUrl && car.imageUrl.length > 5
-        ? car.imageUrl
-        : `https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=2070&auto=format&fit=crop`;
-
+  if (loading)
     return (
-        <div className="max-w-5xl mx-auto">
-            <button
-                onClick={() => navigate('/')}
-                className="flex items-center gap-2 text-slate-500 hover:text-primary mb-6 font-medium transition-colors"
-            >
-                <ArrowLeft size={20} />
-                Back to Listings
-            </button>
-
-            <div className="bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-xl">
-                {/* Image Section */}
-                <div className="h-[400px] md:h-[500px] w-full bg-cover bg-center relative" style={{ backgroundImage: `url('${imageUrl}')` }}>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                    <div className="absolute bottom-8 left-8 text-white">
-                        <span className="bg-primary px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider mb-2 inline-block">
-                            {car.statusName}
-                        </span>
-                        <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-2">{car.brandName} {car.model}</h1>
-                        <p className="text-xl opacity-90">{car.title}</p>
-                    </div>
-                </div>
-
-                <div className="flex flex-col lg:flex-row gap-8 p-8 md:p-12">
-                    {/* Main Specs & Description */}
-                    <div className="w-full lg:w-2/3">
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex flex-col items-center justify-center gap-2 text-center">
-                                <Calendar className="text-primary" />
-                                <span className="font-bold text-lg">{car.year}</span>
-                                <span className="text-xs text-slate-500 uppercase font-semibold">Year</span>
-                            </div>
-                            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex flex-col items-center justify-center gap-2 text-center">
-                                <Gauge className="text-primary" />
-                                <span className="font-bold text-lg">{car.mileage?.toLocaleString()} km</span>
-                                <span className="text-xs text-slate-500 uppercase font-semibold">Mileage</span>
-                            </div>
-                            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex flex-col items-center justify-center gap-2 text-center">
-                                <Fuel className="text-primary" />
-                                <span className="font-bold text-lg">{car.fuelType}</span>
-                                <span className="text-xs text-slate-500 uppercase font-semibold">Fuel</span>
-                            </div>
-                            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex flex-col items-center justify-center gap-2 text-center">
-                                <Settings className="text-primary" />
-                                <span className="font-bold text-lg">{car.transmission}</span>
-                                <span className="text-xs text-slate-500 uppercase font-semibold">Transmission</span>
-                            </div>
-                        </div>
-
-                        <div className="prose prose-slate dark:prose-invert max-w-none">
-                            <h3 className="text-xl font-bold mb-4">Vehicle Description</h3>
-                            <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-                                {car.description || "No description provided by the seller."}
-                            </p>
-                        </div>
-                    </div>
-
-                    {/* Sidebar Price & Seller */}
-                    <div className="w-full lg:w-1/3 space-y-6">
-                        <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                            <p className="text-slate-500 text-sm font-medium mb-1">Asking Price</p>
-                            <div className="text-4xl font-black text-primary tracking-tight">
-                                ${car.price?.toLocaleString()}
-                            </div>
-                            {/* Action Buttons */}
-                            {isOwner && (
-                                <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/30 border border-blue-100 dark:border-blue-800 rounded-xl flex items-center gap-3">
-                                    <div className="size-10 bg-blue-100 dark:bg-blue-800 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-300">
-                                        <User size={20} />
-                                    </div>
-                                    <div>
-                                        <p className="font-bold text-blue-900 dark:text-blue-100">Your Listing</p>
-                                        <p className="text-sm text-blue-700 dark:text-blue-300">You are the seller of this vehicle.</p>
-                                    </div>
-                                </div>
-                            )}
-                            {canBuy && (
-                                <button
-                                    onClick={() => navigate(`/buy/${car.carId}`)}
-                                    className="w-full mt-6 bg-primary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
-                                >
-                                    <ShoppingCart size={20} />
-                                    Buy Now
-                                </button>
-                            )}
-                            {isOwner && (
-                                <div className="space-y-3 mt-6">
-                                    {car.statusName !== 'Sold' && (
-                                        <button
-                                            onClick={() => navigate(`/edit-car/${car.carId}`)}
-                                            className="w-full bg-blue-500 text-white font-bold py-3 rounded-xl hover:bg-blue-600 transition-all flex items-center justify-center gap-2"
-                                        >
-                                            <Edit size={18} />
-                                            Edit Listing
-                                        </button>
-                                    )}
-                                    {car.statusName !== 'Sold' && (
-                                        <button
-                                            onClick={handleDelete}
-                                            className="w-full bg-red-500 text-white font-bold py-3 rounded-xl hover:bg-red-600 transition-all flex items-center justify-center gap-2"
-                                        >
-                                            <Trash2 size={18} />
-                                            Delete Listing
-                                        </button>
-                                    )}
-                                </div>
-                            )}
-                            {!canBuy && !isOwner && car.statusName === 'Sold' && (
-                                <div className="mt-6 px-6 py-3 bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl text-center font-bold">
-                                    This car has been sold
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center gap-4">
-                            <div className="size-12 rounded-full bg-slate-100 flex items-center justify-center">
-                                <User className="text-slate-400" />
-                            </div>
-                            <div>
-                                <p className="text-xs text-slate-500 uppercase font-bold tracking-wider">Seller</p>
-                                <p className="font-bold text-lg">{car.userName}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <div className="max-w-5xl mx-auto space-y-8">
+        <Skeleton className="h-8 w-32" />
+        <Skeleton className="h-[400px] w-full rounded-3xl" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 space-y-4">
+            <Skeleton className="h-24 w-full" />
+            <Skeleton className="h-40 w-full" />
+          </div>
+          <div className="space-y-4">
+            <Skeleton className="h-60 w-full" />
+          </div>
         </div>
+      </div>
     );
+
+  if (error)
+    return (
+      <civ className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
+        <Alert variant="destructive" className="max-w-md">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+        <div className="flex gap-2">
+          <Button onClick={fetchCar} variant="outline">
+            Retry
+          </Button>
+          <Button onClick={() => navigate("/")}>Back to Home</Button>
+        </div>
+      </civ>
+    );
+
+  if (!car) return <div className="text-center py-20">Car not found.</div>;
+
+  const imageUrl =
+    car.imageUrl && car.imageUrl.length > 5
+      ? car.imageUrl
+      : `https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=2070&auto=format&fit=crop`;
+
+  return (
+    <div className="max-w-5xl mx-auto pb-12">
+      <Button
+        variant="ghost"
+        onClick={() => navigate(-1)}
+        className="mb-6 gap-2 pl-0 hover:bg-transparent hover:text-primary"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        Back to Listings
+      </Button>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Main Content Column */}
+        <div className="lg:col-span-2 space-y-8">
+          {/* Hero Image */}
+          <div className="relative aspect-video w-full overflow-hidden rounded-3xl shadow-lg group">
+            <img
+              src={imageUrl}
+              alt={`${car.brandName} ${car.model}`}
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+            <div className="absolute top-4 left-4">
+              <Badge className="text-sm px-3 py-1 font-bold shadow-sm backdrop-blur-md bg-white/90 text-black dark:bg-black/60 dark:text-white">
+                {car.statusName}
+              </Badge>
+            </div>
+          </div>
+
+          {/* Specs Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <Card className="bg-muted/30 border-0">
+              <CardContent className="flex flex-col items-center justify-center p-4 text-center">
+                <Calendar className="h-5 w-5 text-primary mb-2" />
+                <span className="font-bold text-lg">{car.year}</span>
+                <span className="text-xs text-muted-foreground uppercase font-medium">
+                  Year
+                </span>
+              </CardContent>
+            </Card>
+            <Card className="bg-muted/30 border-0">
+              <CardContent className="flex flex-col items-center justify-center p-4 text-center">
+                <Gauge className="h-5 w-5 text-primary mb-2" />
+                <span className="font-bold text-lg">
+                  {car.mileage?.toLocaleString()}
+                </span>
+                <span className="text-xs text-muted-foreground uppercase font-medium">
+                  km
+                </span>
+              </CardContent>
+            </Card>
+            <Card className="bg-muted/30 border-0">
+              <CardContent className="flex flex-col items-center justify-center p-4 text-center">
+                <Fuel className="h-5 w-5 text-primary mb-2" />
+                <span className="font-bold text-lg">{car.fuelType}</span>
+                <span className="text-xs text-muted-foreground uppercase font-medium">
+                  Fuel
+                </span>
+              </CardContent>
+            </Card>
+            <Card className="bg-muted/30 border-0">
+              <CardContent className="flex flex-col items-center justify-center p-4 text-center">
+                <Settings className="h-5 w-5 text-primary mb-2" />
+                <span className="font-bold text-lg">{car.transmission}</span>
+                <span className="text-xs text-muted-foreground uppercase font-medium">
+                  Gearbox
+                </span>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Description */}
+          <div className="space-y-4">
+            <h2 className="text-2xl font-bold tracking-tight">
+              Vehicle Description
+            </h2>
+            <div className="prose prose-slate dark:prose-invert max-w-none text-muted-foreground leading-relaxed">
+              {car.description || (
+                <p className="italic text-muted-foreground/60">
+                  No description provided by the seller.
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Sidebar Column */}
+        <div className="space-y-6">
+          <div className="lg:sticky lg:top-24 space-y-6">
+            {/* Title & Price */}
+            <div>
+              <h1 className="text-3xl sm:text-4xl font-black tracking-tighter mb-2">
+                {car.brandName} {car.model}
+              </h1>
+              <p className="text-lg text-muted-foreground mb-4">{car.title}</p>
+              <div className="text-4xl font-black text-primary">
+                ${car.price?.toLocaleString()}
+              </div>
+            </div>
+
+            {/* Seller Card */}
+            <Card>
+              <CardContent className="flex items-center gap-4 p-6">
+                <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+                  <User className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-muted-foreground uppercase">
+                    Seller
+                  </p>
+                  <p className="font-bold text-lg leading-tight">
+                    {car.userName}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Actions */}
+            <div className="space-y-3">
+              {isOwner && (
+                <>
+                  <Alert className="bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-900 text-blue-800 dark:text-blue-300">
+                    <Info className="h-4 w-4" />
+                    <AlertTitle>Your Listing</AlertTitle>
+                    <AlertDescription>
+                      You are the owner of this listing.
+                    </AlertDescription>
+                  </Alert>
+
+                  {car.statusName !== "Sold" && (
+                    <div className="grid grid-cols-2 gap-3">
+                      <Button
+                        variant="outline"
+                        className="w-full"
+                        onClick={() => navigate(`/edit-car/${car.carId}`)}
+                      >
+                        <Edit className="mr-2 h-4 w-4" /> Edit
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        className="w-full"
+                        onClick={handleDelete}
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" /> Delete
+                      </Button>
+                    </div>
+                  )}
+                </>
+              )}
+
+              {canBuy && (
+                <Button
+                  size="lg"
+                  className="w-full text-lg h-14"
+                  onClick={() => navigate(`/buy/${car.carId}`)}
+                >
+                  <ShoppingCart className="mr-2 h-5 w-5" /> Buy Now
+                </Button>
+              )}
+
+              {!canBuy && !isOwner && car.statusName === "Sold" && (
+                <Button
+                  size="lg"
+                  variant="secondary"
+                  disabled
+                  className="w-full text-lg h-14"
+                >
+                  Vehicle Sold
+                </Button>
+              )}
+
+              {!canBuy && !isOwner && user?.role === "Admin" && (
+                <Alert className="mt-4">
+                  <Shield className="h-4 w-4" />
+                  <AlertTitle>Admin View</AlertTitle>
+                  <AlertDescription>
+                    Admin cannot purchase vehicles.
+                  </AlertDescription>
+                </Alert>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default CarDetails;

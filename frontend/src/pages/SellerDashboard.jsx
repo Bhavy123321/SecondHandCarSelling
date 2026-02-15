@@ -1,178 +1,232 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import api from '../services/api';
-import { Plus, Car, DollarSign, TrendingUp, Package } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import api from "../services/api";
+import {
+  Plus,
+  Car,
+  DollarSign,
+  TrendingUp,
+  Package,
+  ArrowUpRight,
+} from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "../components/ui/card";
+import { Button } from "../components/ui/button";
+import { Badge } from "../components/ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../components/ui/table";
+import { Skeleton } from "../components/ui/skeleton";
 
 const SellerDashboard = () => {
-    const [listings, setListings] = useState([]);
-    const [sales, setSales] = useState([]);
-    const [stats, setStats] = useState({
-        totalListings: 0,
-        activeListings: 0,
-        soldListings: 0,
-        totalRevenue: 0
-    });
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+  const [listings, setListings] = useState([]);
+  const [sales, setSales] = useState([]);
+  const [stats, setStats] = useState({
+    totalListings: 0,
+    activeListings: 0,
+    soldListings: 0,
+    totalRevenue: 0,
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    const fetchData = async () => {
-        try {
-            setLoading(true);
-            setError(null);
-            const user = JSON.parse(localStorage.getItem('user'));
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const user = JSON.parse(localStorage.getItem("user"));
 
-            const [listingsRes, salesRes] = await Promise.all([
-                api.get(`/Car/seller/${user.userId}`),
-                api.get(`/Purchase/seller/${user.userId}/sales`)
-            ]);
+      const [listingsRes, salesRes] = await Promise.all([
+        api.get(`/Car/seller/${user.userId}`),
+        api.get(`/Purchase/seller/${user.userId}/sales`),
+      ]);
 
-            setListings(listingsRes.data);
-            setSales(salesRes.data);
+      setListings(listingsRes.data);
+      setSales(salesRes.data);
 
-            // Calculate stats
-            const totalRevenue = salesRes.data.reduce((sum, sale) => sum + sale.purchasePrice, 0);
-            const activeListings = listingsRes.data.filter(car => car.statusName === 'Available').length;
-            const soldListings = listingsRes.data.filter(car => car.statusName === 'Sold').length;
+      const totalRevenue = salesRes.data.reduce(
+        (sum, sale) => sum + sale.purchasePrice,
+        0,
+      );
+      const activeListings = listingsRes.data.filter(
+        (car) => car.statusName === "Available",
+      ).length;
+      const soldListings = listingsRes.data.filter(
+        (car) => car.statusName === "Sold",
+      ).length;
 
-            setStats({
-                totalListings: listingsRes.data.length,
-                activeListings,
-                soldListings,
-                totalRevenue
-            });
-        } catch (error) {
-            console.error('Error fetching data', error);
-            setError('Failed to load data');
-        } finally {
-            setLoading(false);
-        }
-    };
+      setStats({
+        totalListings: listingsRes.data.length,
+        activeListings,
+        soldListings,
+        totalRevenue,
+      });
+    } catch (error) {
+      console.error("Error fetching data", error);
+      setError("Failed to load data");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    useEffect(() => {
-        fetchData();
-    }, []);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-    if (loading) return (
-        <div className="flex justify-center items-center min-h-[60vh]">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+  const StatCard = ({ title, value, icon: Icon, subtext }) => (
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium">{title}</CardTitle>
+        <Icon className="h-4 w-4 text-muted-foreground" />
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">
+          {loading ? <Skeleton className="h-8 w-20" /> : value}
         </div>
-    );
+        <p className="text-xs text-muted-foreground">{subtext}</p>
+      </CardContent>
+    </Card>
+  );
 
-    if (error) return (
-        <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-            <p className="text-red-500">{error}</p>
-            <button onClick={fetchData} className="px-6 py-3 bg-primary text-white rounded-xl font-bold hover:bg-primary/90">
-                Retry
-            </button>
-        </div>
-    );
-
+  if (error)
     return (
-        <div className="py-8">
-            <div className="mb-8">
-                <h1 className="text-3xl font-black">Seller Dashboard</h1>
-                <p className="text-slate-500 mt-1">Manage your car listings and track sales</p>
-            </div>
-
-            {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-2xl">
-                    <div className="flex items-center justify-between mb-2">
-                        <Package size={32} className="opacity-50" />
-                    </div>
-                    <p className="text-blue-100 text-sm font-medium">Total Listings</p>
-                    <p className="text-3xl font-black mt-1">{stats.totalListings}</p>
-                </div>
-                <div className="bg-gradient-to-br from-green-500 to-green-600 text-white p-6 rounded-2xl">
-                    <div className="flex items-center justify-between mb-2">
-                        <Car size={32} className="opacity-50" />
-                    </div>
-                    <p className="text-green-100 text-sm font-medium">Active Listings</p>
-                    <p className="text-3xl font-black mt-1">{stats.activeListings}</p>
-                </div>
-                <div className="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 rounded-2xl">
-                    <div className="flex items-center justify-between mb-2">
-                        <TrendingUp size={32} className="opacity-50" />
-                    </div>
-                    <p className="text-purple-100 text-sm font-medium">Cars Sold</p>
-                    <p className="text-3xl font-black mt-1">{stats.soldListings}</p>
-                </div>
-                <div className="bg-gradient-to-br from-orange-500 to-orange-600 text-white p-6 rounded-2xl">
-                    <div className="flex items-center justify-between mb-2">
-                        <DollarSign size={32} className="opacity-50" />
-                    </div>
-                    <p className="text-orange-100 text-sm font-medium">Total Revenue</p>
-                    <p className="text-3xl font-black mt-1">${stats.totalRevenue.toLocaleString()}</p>
-                </div>
-            </div>
-
-            {/* Quick Actions */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <Link
-                    to="/sell"
-                    className="group bg-white dark:bg-slate-900 p-8 rounded-2xl border-2 border-primary hover:shadow-xl transition-all"
-                >
-                    <div className="flex items-center gap-4">
-                        <div className="size-16 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-                            <Plus size={32} className="text-primary" />
-                        </div>
-                        <div>
-                            <h3 className="text-xl font-black">Add New Listing</h3>
-                            <p className="text-slate-500">List a new car for sale</p>
-                        </div>
-                    </div>
-                </Link>
-                <Link
-                    to="/my-listings"
-                    className="group bg-white dark:bg-slate-900 p-8 rounded-2xl border-2 border-slate-200 dark:border-slate-800 hover:border-primary hover:shadow-xl transition-all"
-                >
-                    <div className="flex items-center gap-4">
-                        <div className="size-16 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center group-hover:scale-110 transition-transform">
-                            <Car size={32} className="text-slate-600 dark:text-slate-400" />
-                        </div>
-                        <div>
-                            <h3 className="text-xl font-black">Manage Listings</h3>
-                            <p className="text-slate-500">Edit or remove your cars</p>
-                        </div>
-                    </div>
-                </Link>
-            </div>
-
-            {/* Recent Listings */}
-            <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800">
-                <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-xl font-bold">Recent Listings</h2>
-                    <Link to="/my-listings" className="text-primary hover:underline font-medium">View All →</Link>
-                </div>
-                {listings.slice(0, 5).length > 0 ? (
-                    <div className="space-y-4">
-                        {listings.slice(0, 5).map(car => (
-                            <div key={car.carId} className="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-                                <div className="flex items-center gap-4">
-                                    <div className="size-16 rounded-xl bg-slate-200 dark:bg-slate-700 flex items-center justify-center">
-                                        <Car className="text-slate-400" />
-                                    </div>
-                                    <div>
-                                        <p className="font-bold">{car.brandName} {car.model}</p>
-                                        <p className="text-sm text-slate-500">{car.year} • {car.fuelType}</p>
-                                    </div>
-                                </div>
-                                <div className="text-right">
-                                    <p className="font-bold text-primary">${car.price?.toLocaleString()}</p>
-                                    <span className={`text-xs px-2 py-1 rounded-full ${car.statusName === 'Available' ? 'bg-green-100 text-green-700' : 'bg-slate-200 text-slate-700'
-                                        }`}>
-                                        {car.statusName}
-                                    </span>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                ) : (
-                    <p className="text-center py-8 text-slate-500">No listings yet. Add your first car!</p>
-                )}
-            </div>
-        </div>
+      <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
+        <p className="text-destructive font-medium">{error}</p>
+        <Button onClick={fetchData}>Retry</Button>
+      </div>
     );
+
+  return (
+    <div className="space-y-8">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h2 className="text-3xl font-bold tracking-tight">Seller Overview</h2>
+          <p className="text-muted-foreground">
+            Manage your inventory and track performance.
+          </p>
+        </div>
+        <Link to="/sell">
+          <Button className="gap-2">
+            <Plus className="h-4 w-4" />
+            Add New Listing
+          </Button>
+        </Link>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <StatCard
+          title="Total Revenue"
+          value={`$${stats.totalRevenue.toLocaleString()}`}
+          icon={DollarSign}
+          subtext="Lifetime earnings"
+        />
+        <StatCard
+          title="Active Listings"
+          value={stats.activeListings}
+          icon={Car}
+          subtext="Currently on market"
+        />
+        <StatCard
+          title="Cars Sold"
+          value={stats.soldListings}
+          icon={TrendingUp}
+          subtext="Successful sales"
+        />
+        <StatCard
+          title="Total Listings"
+          value={stats.totalListings}
+          icon={Package}
+          subtext="All time inventory"
+        />
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-7">
+        <Card className="col-span-7">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Recent Listings</CardTitle>
+              <CardDescription>Your most recent car listings.</CardDescription>
+            </div>
+            <Link to="/my-listings">
+              <Button variant="ghost" size="sm" className="gap-1">
+                View All <ArrowUpRight className="h-4 w-4" />
+              </Button>
+            </Link>
+          </CardHeader>
+          <CardContent>
+            {loading ? (
+              <div className="space-y-2">
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-12 w-full" />
+              </div>
+            ) : listings.length > 0 ? (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Car Details</TableHead>
+                    <TableHead>Price</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {listings.slice(0, 5).map((car) => (
+                    <TableRow key={car.carId}>
+                      <TableCell className="font-medium">
+                        <div>
+                          <span className="block">
+                            {car.brandName} {car.model}
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            {car.year} • {car.fuelType}
+                          </span>
+                        </div>
+                      </TableCell>
+                      <TableCell>${car.price?.toLocaleString()}</TableCell>
+                      <TableCell>
+                        <Badge
+                          variant={
+                            car.statusName === "Available"
+                              ? "secondary"
+                              : "default"
+                          }
+                        >
+                          {car.statusName}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Link to={`/edit-car/${car.carId}`}>
+                          <Button variant="ghost" size="sm">
+                            Edit
+                          </Button>
+                        </Link>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-8 text-center text-muted-foreground/80">
+                <Car className="h-10 w-10 mb-2 opacity-20" />
+                <p>No listings yet. Start selling today!</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
 };
 
 export default SellerDashboard;

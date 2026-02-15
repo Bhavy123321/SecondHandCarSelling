@@ -1,203 +1,204 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import api from '../services/api';
-import { useAuth } from '../context/AuthContext';
-import { User, Mail, Lock, Phone, Shield, Car } from 'lucide-react';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import api from "../services/api";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import { Select } from "../components/ui/select";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "../components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "../components/ui/alert";
+import { Car, AlertCircle } from "lucide-react";
 
 const Register = () => {
-    const [formData, setFormData] = useState({
-        userName: '',
-        password: '',
-        email: '',
-        phone: '',
-        role: 'Buyer' // Default valid role
-    });
-    const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
-    const { user } = useAuth();
+  const [formData, setFormData] = useState({
+    userName: "",
+    email: "",
+    password: "",
+    phone: "", // ✅ backend expects phone (10-digit)
+    role: "Buyer",
+  });
 
-    // Redirect if already logged in
-    React.useEffect(() => {
-        if (user) {
-            navigate('/');
-        }
-    }, [user, navigate]);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.id]: e.target.value });
-    };
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
+  };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError('');
-        setLoading(true);
-        try {
-            await api.post('/User', formData);
-            setLoading(false);
-            navigate('/login');
-        } catch (err) {
-            console.error(err);
-            setLoading(false);
-            // Display specific validation errors if available
-            if (err.response?.data?.errors) {
-                const validationErrors = Object.values(err.response.data.errors).flat().join(', ');
-                setError(validationErrors);
-            } else {
-                setError(err.response?.data?.message || err.response?.data?.title || 'Registration failed');
-            }
-        }
-    };
+  const handleRoleChange = (e) => {
+    setFormData((prev) => ({ ...prev, role: e.target.value }));
+  };
 
-    return (
-        <div className="flex min-h-screen font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-white">
-            {/* Left Side: Immersive Brand Content (60%) - Hidden on mobile */}
-            <div className="hidden lg:flex lg:w-[60%] relative flex-col justify-between p-12 overflow-hidden bg-slate-900">
-                <div className="absolute inset-0 z-0">
-                    <div className="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/40 to-transparent z-10"></div>
-                    {/* Placeholder for car image */}
-                    <div className="w-full h-full bg-center bg-no-repeat bg-cover opacity-60" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1966&auto=format&fit=crop')" }}></div>
-                </div>
+  const handlePhoneChange = (e) => {
+    // ✅ keep only digits, max 10 (Indian mobile)
+    const digits = e.target.value.replace(/\D/g, "").slice(0, 10);
+    setFormData((prev) => ({ ...prev, phone: digits }));
+  };
 
-                <div className="relative z-20 flex items-center gap-3">
-                    <div className="size-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
-                        <Car className="text-white" />
-                    </div>
-                    <h2 className="text-white text-2xl font-black tracking-tight">AutoPremium</h2>
-                </div>
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
 
-                <div className="relative z-20 max-w-xl">
-                    <h1 className="text-white text-5xl font-black leading-tight tracking-tight mb-6">
-                        Join the exclusive circle.
-                    </h1>
-                    <p className="text-white/80 text-lg font-medium leading-relaxed">
-                        Create an account to access premium listings, schedule test drives, and find your dream car.
-                    </p>
-                </div>
+    // ✅ quick frontend validation
+    if (formData.phone.length !== 10) {
+      setLoading(false);
+      setError("Phone number must be a valid 10-digit Indian mobile number.");
+      return;
+    }
 
-                <div className="relative z-20">
-                    <p className="text-white/40 text-sm font-medium">© 2026 AutoPremium Global Inc.</p>
-                </div>
+    try {
+      await api.post("/User", {
+        userName: formData.userName,
+        email: formData.email,
+        password: formData.password,
+        phone: formData.phone,
+        role: formData.role,
+      });
+
+      navigate("/login");
+    } catch (err) {
+      console.error(err);
+
+      // ✅ show backend validation errors nicely
+      const data = err.response?.data;
+      const phoneErrors = data?.errors?.Phone?.join(" ");
+      const anyErrors =
+        data?.errors && typeof data.errors === "object"
+          ? Object.values(data.errors).flat().join(" ")
+          : null;
+
+      setError(
+        phoneErrors ||
+        anyErrors ||
+        data?.title ||
+        data?.message ||
+        "Registration failed. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4 py-8">
+      <Card className="w-full max-w-md shadow-xl border-t-4 border-t-primary">
+        <CardHeader className="space-y-1 text-center">
+          <div className="flex justify-center mb-4">
+            <div className="size-12 bg-primary rounded-xl flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/25">
+              <Car size={24} />
+            </div>
+          </div>
+          <CardTitle className="text-2xl font-bold tracking-tight">
+            Create an account
+          </CardTitle>
+          <CardDescription>
+            Join AutoPremium to buy or sell luxury vehicles
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {error && (
+              <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="userName">Username</Label>
+                <Input
+                  id="userName"
+                  placeholder="johndoe"
+                  value={formData.userName}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="role">I want to</Label>
+                <Select
+                  id="role"
+                  value={formData.role}
+                  onChange={handleRoleChange}
+                  className="w-full"
+                >
+                  <option value="Buyer">Buy Cars</option>
+                  <option value="Seller">Sell Cars</option>
+                </Select>
+              </div>
             </div>
 
-            {/* Right Side: Registration Form (40%) */}
-            <div className="w-full lg:w-[40%] flex flex-col justify-center items-center px-6 py-12 sm:px-12 bg-white dark:bg-background-dark overflow-y-auto">
-                <div className="w-full max-w-md space-y-8 my-auto">
-
-                    <div className="lg:hidden flex justify-center mb-8">
-                        <div className="flex items-center gap-2">
-                            <Car className="text-primary text-3xl" />
-                            <h2 className="text-2xl font-black tracking-tight">AutoPremium</h2>
-                        </div>
-                    </div>
-
-                    <div className="text-center lg:text-left space-y-2">
-                        <h2 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">Create Account</h2>
-                        <p className="text-slate-500 dark:text-slate-400">Enter your details to register.</p>
-                    </div>
-
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        {error && <div className="p-3 bg-red-100 text-red-600 rounded-lg text-sm">{error}</div>}
-
-                        <div className="space-y-1.5">
-                            <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1" htmlFor="userName">Username</label>
-                            <div className="relative">
-                                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
-                                <input
-                                    className="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none text-slate-900 dark:text-white"
-                                    id="userName"
-                                    type="text"
-                                    placeholder="Username (Letters only)"
-                                    value={formData.userName}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-                            <p className="text-xs text-slate-400 ml-1">Letters only (A-Z, no spaces/numbers)</p>
-                        </div>
-
-                        <div className="space-y-1.5">
-                            <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1" htmlFor="email">Email Address</label>
-                            <div className="relative">
-                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
-                                <input
-                                    className="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none text-slate-900 dark:text-white"
-                                    id="email"
-                                    type="email"
-                                    placeholder="name@example.com"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-                        </div>
-
-                        <div className="space-y-1.5">
-                            <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1" htmlFor="phone">Phone Number</label>
-                            <div className="relative">
-                                <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
-                                <input
-                                    className="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none text-slate-900 dark:text-white"
-                                    id="phone"
-                                    type="tel"
-                                    placeholder="10-digit mobile (e.g. 9876543210)"
-                                    value={formData.phone}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-                            <p className="text-xs text-slate-400 ml-1">Indian mobile number starting with 6-9</p>
-                        </div>
-
-                        <div className="space-y-1.5">
-                            <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1" htmlFor="role">Account Type</label>
-                            <div className="relative">
-                                <Shield className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
-                                <select
-                                    className="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none text-slate-900 dark:text-white appearance-none"
-                                    id="role"
-                                    value={formData.role}
-                                    onChange={handleChange}
-                                >
-                                    <option value="Buyer">Buyer</option>
-                                    <option value="Seller">Seller</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div className="space-y-1.5">
-                            <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1" htmlFor="password">Password</label>
-                            <div className="relative">
-                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
-                                <input
-                                    className="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none text-slate-900 dark:text-white"
-                                    id="password"
-                                    type="password"
-                                    placeholder="Create a password"
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-                        </div>
-
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="w-full bg-primary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/90 hover:shadow-xl transition-all active:scale-[0.98] mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            {loading ? 'Creating Account...' : 'Create Account'}
-                        </button>
-                    </form>
-
-                    <p className="text-center text-slate-500 dark:text-slate-400 font-medium">
-                        Already have an account?
-                        <Link to="/login" className="text-primary font-bold hover:underline underline-offset-4 ml-1">Sign in</Link>
-                    </p>
-                </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="name@example.com"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
             </div>
-        </div>
-    );
+
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone Number</Label>
+              <Input
+                id="phone"
+                type="tel"
+                inputMode="numeric"
+                placeholder="10-digit Indian number (e.g. 9876543210)"
+                value={formData.phone}
+                onChange={handlePhoneChange}
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="••••••••"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+              <p className="text-[0.8rem] text-muted-foreground">
+                Must be at least 8 characters long
+              </p>
+            </div>
+
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Creating account..." : "Create account"}
+            </Button>
+          </form>
+        </CardContent>
+
+        <CardFooter className="flex flex-col gap-2 border-t p-6 bg-muted/10">
+          <p className="text-xs text-center text-muted-foreground">
+            Already have an account?{" "}
+            <Link to="/login" className="text-primary hover:underline font-medium">
+              Sign in
+            </Link>
+          </p>
+        </CardFooter>
+      </Card>
+    </div>
+  );
 };
 
 export default Register;
