@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Car, Search, Heart, Bell, User, LogOut, Plus } from 'lucide-react';
+import { Car, Search, Heart, Bell, User, LogOut, Plus, Shield, Package, ShoppingBag, LayoutDashboard } from 'lucide-react';
 
 const Layout = ({ children }) => {
     const { user, logout } = useAuth();
@@ -40,9 +40,52 @@ const Layout = ({ children }) => {
                     {/* Nav Links & Actions */}
                     <div className="flex items-center gap-4 md:gap-8">
                         <nav className="hidden xl:flex items-center gap-8">
-                            <Link to="/" className="text-sm font-medium hover:text-primary transition-colors">Buy Cars</Link>
-                            {(user?.role === 'Seller' || user?.role === 'Admin') && (
-                                <Link to="/sell" className="text-sm font-medium hover:text-primary transition-colors">Sell Your Car</Link>
+                            {/* Buyer Navigation */}
+                            {(user?.role === 'Buyer' || !user) && (
+                                <>
+                                    <Link to="/" className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-1">
+                                        <ShoppingBag size={16} />
+                                        Browse Cars
+                                    </Link>
+                                    {user && (
+                                        <Link to="/my-purchases" className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-1">
+                                            <Package size={16} />
+                                            My Purchases
+                                        </Link>
+                                    )}
+                                </>
+                            )}
+
+                            {/* Seller Navigation */}
+                            {user?.role === 'Seller' && (
+                                <>
+                                    <Link to="/" className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-1">
+                                        <LayoutDashboard size={16} />
+                                        Dashboard
+                                    </Link>
+                                    <Link to="/my-listings" className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-1">
+                                        <Car size={16} />
+                                        My Listings
+                                    </Link>
+                                    <Link to="/sell" className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-1">
+                                        <Plus size={16} />
+                                        Add Car
+                                    </Link>
+                                </>
+                            )}
+
+                            {/* Admin Navigation */}
+                            {user?.role === 'Admin' && (
+                                <>
+                                    <Link to="/" className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-1">
+                                        <ShoppingBag size={16} />
+                                        Browse Cars
+                                    </Link>
+                                    <Link to="/admin" className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-1">
+                                        <Shield size={16} />
+                                        Admin Panel
+                                    </Link>
+                                </>
                             )}
                         </nav>
                         <div className="flex items-center gap-3">
@@ -62,7 +105,12 @@ const Layout = ({ children }) => {
 
                             <div className="flex items-center gap-3 ml-2">
                                 <div className="text-right hidden md:block">
-                                    <p className="text-sm font-bold">{user?.userName}</p>
+                                    <p className="text-sm font-bold flex items-center gap-1 justify-end">
+                                        {user?.userName}
+                                        {user?.role === 'Admin' && (
+                                            <span className="bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">ADMIN</span>
+                                        )}
+                                    </p>
                                     <p className="text-xs text-slate-500 capitalize">{user?.role}</p>
                                 </div>
                                 <button onClick={handleLogout} className="flex items-center justify-center size-11 rounded-xl bg-red-50 text-red-500 hover:bg-red-100 transition-colors" title="Logout">

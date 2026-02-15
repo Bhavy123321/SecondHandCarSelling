@@ -9,15 +9,18 @@ const Login = () => {
     const { login } = useAuth();
     const navigate = useNavigate();
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
-        const success = await login(userName, password);
-        if (success) {
+        setLoading(true);
+        const result = await login(userName, password);
+        setLoading(false);
+        if (result.success) {
             navigate('/');
         } else {
-            setError('Invalid credentials');
+            setError(result.error || 'Invalid credentials');
         }
     };
 
@@ -105,9 +108,10 @@ const Login = () => {
 
                         <button
                             type="submit"
-                            className="w-full bg-primary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/90 hover:shadow-xl transition-all active:scale-[0.98]"
+                            disabled={loading}
+                            className="w-full bg-primary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/90 hover:shadow-xl transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            Sign In to Account
+                            {loading ? 'Signing In...' : 'Sign In to Account'}
                         </button>
                     </form>
 

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-// import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
 import { User, Mail, Lock, Phone, Shield, Car } from 'lucide-react';
@@ -13,6 +12,7 @@ const Register = () => {
         role: 'Buyer' // Default valid role
     });
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -22,11 +22,14 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+        setLoading(true);
         try {
             await api.post('/User', formData);
+            setLoading(false);
             navigate('/login');
         } catch (err) {
             console.error(err);
+            setLoading(false);
             // Display specific validation errors if available
             if (err.response?.data?.errors) {
                 const validationErrors = Object.values(err.response.data.errors).flat().join(', ');
@@ -171,9 +174,10 @@ const Register = () => {
 
                         <button
                             type="submit"
-                            className="w-full bg-primary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/90 hover:shadow-xl transition-all active:scale-[0.98] mt-4"
+                            disabled={loading}
+                            className="w-full bg-primary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/90 hover:shadow-xl transition-all active:scale-[0.98] mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            Create Account
+                            {loading ? 'Creating Account...' : 'Create Account'}
                         </button>
                     </form>
 

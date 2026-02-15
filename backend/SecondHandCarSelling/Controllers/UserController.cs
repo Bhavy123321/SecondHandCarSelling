@@ -1,6 +1,7 @@
 ﻿using SecondHandCarSellingAPI.Data;
 using SecondHandCarSellingAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace SecondHandCarSellingAPI.Controllers
@@ -26,6 +27,7 @@ namespace SecondHandCarSellingAPI.Controllers
         //    return Ok(user);
         //}
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
@@ -140,6 +142,7 @@ namespace SecondHandCarSellingAPI.Controllers
 
         #region Delete User
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {

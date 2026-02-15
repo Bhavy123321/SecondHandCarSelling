@@ -1,31 +1,77 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
-import { Calendar, Gauge, Settings, Fuel, ArrowLeft, User, Phone, Mail } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { Calendar, Gauge, Settings, Fuel, ArrowLeft, User, Phone, Mail, ShoppingCart, Edit, Trash2 } from 'lucide-react';
 
 const CarDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const { user } = useAuth();
     const [car, setCar] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    const isOwner = user && car && user.userId === car.userId;
+    const canBuy = user && car && user.userId !== car.userId && car.statusName === 'Available';
+
+    const handleDelete = async () => {
+        if (!window.confirm(`Are you sure you want to delete this car listing?`)) return;
+
+        try {
+            await api.delete(`/Car/${id}`);
+            navigate('/my-listings');
+        } catch (error) {
+            console.error('Error deleting car', error);
+            alert('Failed to delete car');
+        }
+    };
+
+    const fetchCar = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            const response = await api.get(`/Car/${id}`);
+            setCar(response.data);
+        } catch (error) {
+            console.error("Error fetching car details", error);
+            if (error.response?.status === 404) {
+                setError('Car not found. It may have been sold or removed.');
+            } else {
+                setError('Failed to load car details. Please try again.');
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchCar = async () => {
-            try {
-                const response = await api.get(`/Car/${id}`);
-                setCar(response.data);
-            } catch (error) {
-                console.error("Error fetching car details", error);
-            } finally {
-                setLoading(false);
-            }
-        };
         fetchCar();
     }, [id]);
 
     if (loading) return (
         <div className="flex justify-center items-center min-h-[60vh]">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        </div>
+    );
+
+    if (error) return (
+        <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+            <p className="text-red-500 text-center">{error}</p>
+            <div className="flex gap-3">
+                <button
+                    onClick={fetchCar}
+                    className="px-6 py-3 bg-primary text-white rounded-xl font-bold hover:bg-primary/90 transition-colors"
+                >
+                    Retry
+                </button>
+                <button
+                    onClick={() => navigate('/')}
+                    className="px-6 py-3 bg-slate-200 dark:bg-slate-800 rounded-xl font-bold hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors"
+                >
+                    Back to Home
+                </button>
+            </div>
         </div>
     );
 
@@ -99,9 +145,39 @@ const CarDetails = () => {
                             <div className="text-4xl font-black text-primary tracking-tight">
                                 ${car.price?.toLocaleString()}
                             </div>
-                            <button className="w-full mt-6 bg-primary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all active:scale-[0.98]">
-                                Contact Seller
-                            </button>
+                            {/* Action Buttons */}
+                            {canBuy && (
+                                <button
+                                    onClick={() => navigate(`/buy/${car.carId}`)}
+                                    className="w-full mt-6 bg-primary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+                                >
+                                    <ShoppingCart size={20} />
+                                    Buy Now
+                                </button>
+                            )}
+                            {isOwner && (
+                                <div className="space-y-3 mt-6">
+                                    <button
+                                        onClick={() => navigate(`/edit-car/${car.carId}`)}
+                                        className="w-full bg-blue-500 text-white font-bold py-3 rounded-xl hover:bg-blue-600 transition-all flex items-center justify-center gap-2"
+                                    >
+                                        <Edit size={18} />
+                                        Edit Listing
+                                    </button>
+                                    <button
+                                        onClick={handleDelete}
+                                        className="w-full bg-red-500 text-white font-bold py-3 rounded-xl hover:bg-red-600 transition-all flex items-center justify-center gap-2"
+                                    >
+                                        <Trash2 size={18} />
+                                        Delete Listing
+                                    </button>
+                                </div>
+                            )}
+                            {!canBuy && !isOwner && car.statusName === 'Sold' && (
+                                <div className="mt-6 px-6 py-3 bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl text-center font-bold">
+                                    This car has been sold
+                                </div>
+                            )}
                         </div>
 
                         <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center gap-4">

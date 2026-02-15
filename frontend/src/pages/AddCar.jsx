@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import { Car, Ticket, Calendar, Gauge, Fuel, Settings, DollarSign, FileText } from 'lucide-react';
 
 const AddCar = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
     const [formData, setFormData] = useState({
         title: '',
         model: '',
@@ -37,6 +38,8 @@ const AddCar = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');
+        setLoading(true);
         try {
             // Need to ensure numeric values are numbers
             const payload = {
@@ -51,10 +54,15 @@ const AddCar = () => {
             };
 
             await api.post('/Car', payload);
+            setLoading(false);
             navigate('/');
         } catch (error) {
             console.error("Error adding car", error);
-            alert("Failed to add car. Please check inputs.");
+            setLoading(false);
+            const errorMsg = error.response?.data?.message ||
+                error.response?.data?.title ||
+                'Failed to add car. Please check your inputs and try again.';
+            setError(errorMsg);
         }
     };
 
@@ -63,6 +71,8 @@ const AddCar = () => {
             <h1 className="text-3xl font-black mb-8 text-center">List Your Vehicle</h1>
 
             <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+
+                {error && <div className="p-3 bg-red-100 text-red-600 rounded-lg text-sm">{error}</div>}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
@@ -121,8 +131,12 @@ const AddCar = () => {
                     <textarea id="description" rows="4" placeholder="Tell us about the car..." onChange={handleChange} className="w-full p-3 rounded-xl border bg-slate-50 dark:bg-slate-800 dark:border-slate-700 outline-none focus:ring-2 focus:ring-primary"></textarea>
                 </div>
 
-                <button type="submit" className="w-full bg-primary text-white font-bold py-4 rounded-xl shadow-lg hover:bg-primary/90 transition-all text-lg">
-                    Post Listing
+                <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full bg-primary text-white font-bold py-4 rounded-xl shadow-lg hover:bg-primary/90 transition-all text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    {loading ? 'Posting...' : 'Post Listing'}
                 </button>
             </form>
         </div>

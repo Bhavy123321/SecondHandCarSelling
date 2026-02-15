@@ -16,7 +16,5 @@ namespace SecondHandCarSellingAPI.Data
         public DbSet<CarStatusModel> CarStatus { get; set; }
         public DbSet<ReviewModel> Review { get; set; }
         public DbSet<PurchaseModel> Purchase { get; set; }
-        public object Cars { get; internal set; }
-        public object CarBrands { get; internal set; }
     }
 }

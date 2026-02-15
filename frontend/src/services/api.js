@@ -12,4 +12,18 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
+// Add response interceptor for error handling
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        // Handle 401 Unauthorized errors (expired token)
+        if (error.response?.status === 401) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/login';
+        }
+        return Promise.reject(error);
+    }
+);
+
 export default api;

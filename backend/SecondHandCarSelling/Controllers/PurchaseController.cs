@@ -67,6 +67,82 @@ namespace SecondHandCarSellingAPI.Controllers
 
         #endregion
 
+        #region Get Purchases By Buyer
+
+        [HttpGet("buyer/{userId}")]
+        public async Task<IActionResult> GetPurchasesByBuyer(int userId)
+        {
+            var purchases = await _context.Purchase
+                .Include(p => p.Car)
+                    .ThenInclude(c => c.Brand)
+                .Include(p => p.Car.Status)
+                .Include(p => p.Car.User)
+                .Where(p => p.UserId == userId)
+                .Select(p => new
+                {
+                    p.PurchaseId,
+                    p.CarId,
+                    p.UserId,
+                    p.PurchasePrice,
+                    p.PaymentMethod,
+                    p.Status,
+                    p.CreatedDate,
+                    Car = new
+                    {
+                        p.Car.CarId,
+                        p.Car.Title,
+                        p.Car.Model,
+                        p.Car.Year,
+                        BrandName = p.Car.Brand.BrandName,
+                        StatusName = p.Car.Status.StatusName,
+                        SellerName = p.Car.User.UserName,
+                        ImageUrl = _context.CarImages.Where(i => i.CarId == p.Car.CarId).Select(i => i.ImageUrl).FirstOrDefault()
+                    }
+                })
+                .ToListAsync();
+
+            return Ok(purchases);
+        }
+
+        #endregion
+
+        #region Get Sales By Seller
+
+        [HttpGet("seller/{userId}/sales")]
+        public async Task<IActionResult> GetSalesBySeller(int userId)
+        {
+            var sales = await _context.Purchase
+                .Include(p => p.Car)
+                    .ThenInclude(c => c.Brand)
+                .Include(p => p.User)
+                .Where(p => p.Car.UserId == userId)
+                .Select(p => new
+                {
+                    p.PurchaseId,
+                    p.CarId,
+                    p.UserId,
+                    p.PurchasePrice,
+                    p.PaymentMethod,
+                    p.Status,
+                    p.CreatedDate,
+                    Car = new
+                    {
+                        p.Car.CarId,
+                        p.Car.Title,
+                        p.Car.Model,
+                        p.Car.Year,
+                        BrandName = p.Car.Brand.BrandName
+                    },
+                    BuyerName = p.User.UserName,
+                    BuyerEmail = p.User.Email
+                })
+                .ToListAsync();
+
+            return Ok(sales);
+        }
+
+        #endregion
+
         #region Add New Purchase
 
         [HttpPost]
@@ -74,6 +150,14 @@ namespace SecondHandCarSellingAPI.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            // Check if car exists and is available
+            var car = await _context.Car.Include(c => c.Status).FirstOrDefaultAsync(c => c.CarId == dto.CarId);
+            if (car == null)
+                return NotFound(new { message = "Car not found" });
+
+            if (car.Status.StatusName != "Available")
+                return BadRequest(new { message = "Car is not available for purchase" });
 
             var purchase = new PurchaseModel
             {
@@ -86,9 +170,18 @@ namespace SecondHandCarSellingAPI.Controllers
             };
 
             _context.Purchase.Add(purchase);
+
+            // Mark car as sold by updating status
+            var soldStatus = await _context.CarStatus.FirstOrDefaultAsync(s => s.StatusName == "Sold");
+            if (soldStatus != null)
+            {
+                car.StatusId = soldStatus.StatusId;
+                car.ModifiedDate = DateTime.Now;
+            }
+
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Purchase created successfully", purchase.PurchaseId });
+            return Ok(new { message = "Purchase completed successfully", purchase.PurchaseId });
         }
 
         #endregion

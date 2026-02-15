@@ -1,25 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import api from '../services/api';
 import CarCard from '../components/CarCard';
-import { SlidersHorizontal, ChevronDown } from 'lucide-react';
 
 const Home = () => {
     const [cars, setCars] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [filterBrand, setFilterBrand] = useState('All');
 
+    const fetchCars = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            const response = await api.get('/Car');
+            setCars(response.data);
+        } catch (error) {
+            console.error("Error fetching cars", error);
+            setError('Failed to load car listings. Please try again.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
-        const fetchCars = async () => {
-            try {
-                const response = await api.get('/Car');
-                setCars(response.data);
-            } catch (error) {
-                console.error("Error fetching cars", error);
-            } finally {
-                setLoading(false);
-            }
-        };
         fetchCars();
     }, []);
 
@@ -36,6 +40,18 @@ const Home = () => {
     if (loading) return (
         <div className="flex items-center justify-center min-h-[60vh]">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        </div>
+    );
+
+    if (error) return (
+        <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+            <p className="text-red-500 text-center">{error}</p>
+            <button
+                onClick={fetchCars}
+                className="px-6 py-3 bg-primary text-white rounded-xl font-bold hover:bg-primary/90 transition-colors"
+            >
+                Retry
+            </button>
         </div>
     );
 

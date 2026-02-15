@@ -3,6 +3,7 @@ using SecondHandCarSellingAPI.Data;
 using SecondHandCarSellingAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
@@ -89,6 +90,74 @@ namespace SecondHandCarSellingAPI.Controllers
 
         #endregion
 
+        #region Get Cars By Seller
+
+        [HttpGet("seller/{userId}")]
+        public async Task<ActionResult<IEnumerable<CarResponseDTO>>> GetCarsBySeller(int userId)
+        {
+            var cars = await _context.Car
+                .Include(c => c.Brand)
+                .Include(c => c.Status)
+                .Include(c => c.User)
+                .Where(c => c.UserId == userId)
+                .Select(c => new CarResponseDTO
+                {
+                    CarId = c.CarId,
+                    Title = c.Title,
+                    Model = c.Model,
+                    Year = c.Year,
+                    Price = c.Price,
+                    Mileage = c.Mileage,
+                    FuelType = c.FuelType,
+                    Transmission = c.Transmission,
+                    Description = c.Description,
+                    CreatedDate = c.CreatedDate,
+                    BrandName = c.Brand.BrandName,
+                    StatusName = c.Status.StatusName,
+                    UserName = c.User.UserName,
+                    ImageUrl = _context.CarImages.Where(i => i.CarId == c.CarId).Select(i => i.ImageUrl).FirstOrDefault()
+                })
+                .ToListAsync();
+
+            return Ok(cars);
+        }
+
+        #endregion
+
+        #region Get Available Cars
+
+        [HttpGet("available")]
+        public async Task<ActionResult<IEnumerable<CarResponseDTO>>> GetAvailableCars()
+        {
+            var cars = await _context.Car
+                .Include(c => c.Brand)
+                .Include(c => c.Status)
+                .Include(c => c.User)
+                .Where(c => c.Status.StatusName == "Available")
+                .Select(c => new CarResponseDTO
+                {
+                    CarId = c.CarId,
+                    Title = c.Title,
+                    Model = c.Model,
+                    Year = c.Year,
+                    Price = c.Price,
+                    Mileage = c.Mileage,
+                    FuelType = c.FuelType,
+                    Transmission = c.Transmission,
+                    Description = c.Description,
+                    CreatedDate = c.CreatedDate,
+                    BrandName = c.Brand.BrandName,
+                    StatusName = c.Status.StatusName,
+                    UserName = c.User.UserName,
+                    ImageUrl = _context.CarImages.Where(i => i.CarId == c.CarId).Select(i => i.ImageUrl).FirstOrDefault()
+                })
+                .ToListAsync();
+
+            return Ok(cars);
+        }
+
+        #endregion
+
         #region Add New Car
 
         [HttpPost]
@@ -155,6 +224,7 @@ namespace SecondHandCarSellingAPI.Controllers
 
         #region Delete Car
 
+        [Authorize] // Admin or car owner can delete
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCar(int id)
         {
