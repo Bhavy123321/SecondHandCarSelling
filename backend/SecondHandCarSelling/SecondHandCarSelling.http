@@ -1,0 +1,6 @@
+@SecondHandCarSelling_HostAddress = http://localhost:5197
+
+GET {{SecondHandCarSelling_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

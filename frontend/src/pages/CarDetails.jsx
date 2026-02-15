@@ -1,0 +1,123 @@
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import api from '../services/api';
+import { Calendar, Gauge, Settings, Fuel, ArrowLeft, User, Phone, Mail } from 'lucide-react';
+
+const CarDetails = () => {
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const [car, setCar] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchCar = async () => {
+            try {
+                const response = await api.get(`/Car/${id}`);
+                setCar(response.data);
+            } catch (error) {
+                console.error("Error fetching car details", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchCar();
+    }, [id]);
+
+    if (loading) return (
+        <div className="flex justify-center items-center min-h-[60vh]">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        </div>
+    );
+
+    if (!car) return <div className="text-center py-20">Car not found.</div>;
+
+    const imageUrl = car.imageUrl && car.imageUrl.length > 5
+        ? car.imageUrl
+        : `https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=2070&auto=format&fit=crop`;
+
+    return (
+        <div className="max-w-5xl mx-auto">
+            <button
+                onClick={() => navigate('/')}
+                className="flex items-center gap-2 text-slate-500 hover:text-primary mb-6 font-medium transition-colors"
+            >
+                <ArrowLeft size={20} />
+                Back to Listings
+            </button>
+
+            <div className="bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-xl">
+                {/* Image Section */}
+                <div className="h-[400px] md:h-[500px] w-full bg-cover bg-center relative" style={{ backgroundImage: `url('${imageUrl}')` }}>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                    <div className="absolute bottom-8 left-8 text-white">
+                        <span className="bg-primary px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider mb-2 inline-block">
+                            {car.statusName}
+                        </span>
+                        <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-2">{car.brandName} {car.model}</h1>
+                        <p className="text-xl opacity-90">{car.title}</p>
+                    </div>
+                </div>
+
+                <div className="flex flex-col lg:flex-row gap-8 p-8 md:p-12">
+                    {/* Main Specs & Description */}
+                    <div className="w-full lg:w-2/3">
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex flex-col items-center justify-center gap-2 text-center">
+                                <Calendar className="text-primary" />
+                                <span className="font-bold text-lg">{car.year}</span>
+                                <span className="text-xs text-slate-500 uppercase font-semibold">Year</span>
+                            </div>
+                            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex flex-col items-center justify-center gap-2 text-center">
+                                <Gauge className="text-primary" />
+                                <span className="font-bold text-lg">{car.mileage?.toLocaleString()} km</span>
+                                <span className="text-xs text-slate-500 uppercase font-semibold">Mileage</span>
+                            </div>
+                            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex flex-col items-center justify-center gap-2 text-center">
+                                <Fuel className="text-primary" />
+                                <span className="font-bold text-lg">{car.fuelType}</span>
+                                <span className="text-xs text-slate-500 uppercase font-semibold">Fuel</span>
+                            </div>
+                            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex flex-col items-center justify-center gap-2 text-center">
+                                <Settings className="text-primary" />
+                                <span className="font-bold text-lg">{car.transmission}</span>
+                                <span className="text-xs text-slate-500 uppercase font-semibold">Transmission</span>
+                            </div>
+                        </div>
+
+                        <div className="prose prose-slate dark:prose-invert max-w-none">
+                            <h3 className="text-xl font-bold mb-4">Vehicle Description</h3>
+                            <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+                                {car.description || "No description provided by the seller."}
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Sidebar Price & Seller */}
+                    <div className="w-full lg:w-1/3 space-y-6">
+                        <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                            <p className="text-slate-500 text-sm font-medium mb-1">Asking Price</p>
+                            <div className="text-4xl font-black text-primary tracking-tight">
+                                ${car.price?.toLocaleString()}
+                            </div>
+                            <button className="w-full mt-6 bg-primary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all active:scale-[0.98]">
+                                Contact Seller
+                            </button>
+                        </div>
+
+                        <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center gap-4">
+                            <div className="size-12 rounded-full bg-slate-100 flex items-center justify-center">
+                                <User className="text-slate-400" />
+                            </div>
+                            <div>
+                                <p className="text-xs text-slate-500 uppercase font-bold tracking-wider">Seller</p>
+                                <p className="font-bold text-lg">{car.userName}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default CarDetails;

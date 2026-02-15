@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+
+<html class="" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sell Your Car - Premium Motors</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#3c83f6",
+                "background-light": "#f5f7f8",
+                "background-dark": "#101722",
+              },
+              fontFamily: {
+                "display": ["Inter", "sans-serif"]
+              },
+              borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+            },
+          },
+        }
+      </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white min-h-screen transition-colors duration-300">
+<!-- Top Navigation Bar -->
+<header class="border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-background-dark sticky top-0 z-50">
+<div class="max-w-[1200px] mx-auto flex items-center justify-between px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="bg-primary p-1.5 rounded-lg text-white">
+<span class="material-symbols-outlined block">directions_car</span>
+</div>
+<h2 class="text-xl font-bold tracking-tight">Premium Motors</h2>
+</div>
+<div class="hidden md:flex flex-1 justify-center gap-10">
+<a class="text-sm font-semibold hover:text-primary transition-colors" href="#">Buy</a>
+<a class="text-sm font-semibold text-primary" href="#">Sell</a>
+<a class="text-sm font-semibold hover:text-primary transition-colors" href="#">Auctions</a>
+<a class="text-sm font-semibold hover:text-primary transition-colors" href="#">Reviews</a>
+</div>
+<div class="flex gap-3">
+<button class="flex min-w-[100px] cursor-pointer items-center justify-center rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold">
+                    Sign Up
+                </button>
+<button class="flex min-w-[100px] cursor-pointer items-center justify-center rounded-lg h-10 px-4 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white text-sm font-bold">
+                    Login
+                </button>
+</div>
+</div>
+</header>
+<main class="max-w-[1200px] mx-auto px-6 py-12">
+<!-- Page Heading -->
+<div class="mb-10 text-center max-w-2xl mx-auto">
+<h1 class="text-4xl md:text-5xl font-black tracking-tight mb-4">Sell Your Car</h1>
+<p class="text-slate-500 dark:text-slate-400 text-lg">Your car could be sold within 24 hours 🚀</p>
+</div>
+<!-- Progress Bar -->
+<div class="max-w-[800px] mx-auto mb-12">
+<div class="flex flex-col gap-3">
+<div class="flex gap-6 justify-between items-end">
+<p class="text-slate-900 dark:text-white text-base font-semibold">Step 1 of 4: Car Details</p>
+<p class="text-primary text-sm font-bold">25% Complete</p>
+</div>
+<div class="h-2.5 w-full rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+<div class="h-full rounded-full bg-primary" style="width: 25%;"></div>
+</div>
+</div>
+</div>
+<!-- Main Form Section -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+<!-- Left Side: Form Inputs -->
+<div class="lg:col-span-2 space-y-8">
+<div class="bg-white dark:bg-[#182334] rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-8">
+<h3 class="text-xl font-bold mb-6">Vehicle Identification</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+<label class="flex flex-col gap-2">
+<span class="text-sm font-semibold text-slate-700 dark:text-slate-300">License Plate</span>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400">pin</span>
+<input class="w-full pl-11 pr-4 py-3.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-[#101722] focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" placeholder="ABC-1234" type="text" value="KTM-9921"/>
+</div>
+</label>
+<label class="flex flex-col gap-2">
+<span class="text-sm font-semibold text-slate-700 dark:text-slate-300">State/Region</span>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400">location_on</span>
+<input class="w-full pl-11 pr-4 py-3.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-[#101722] focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" placeholder="e.g. California" type="text" value="California"/>
+</div>
+</label>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+<label class="flex flex-col gap-2">
+<span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Make &amp; Model</span>
+<input class="w-full px-4 py-3.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-[#101722] focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" placeholder="e.g. Tesla Model 3" type="text" value="Tesla Model 3"/>
+</label>
+<label class="flex flex-col gap-2">
+<span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Year</span>
+<select class="w-full px-4 py-3.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-[#101722] focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all">
+<option>2024</option>
+<option selected="">2023</option>
+<option>2022</option>
+<option>2021</option>
+</select>
+</label>
+</div>
+<div class="space-y-4">
+<span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Vehicle Photos</span>
+<div class="border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-xl p-10 flex flex-col items-center justify-center bg-slate-50 dark:bg-[#101722] hover:bg-slate-100 dark:hover:bg-[#151f2e] transition-colors cursor-pointer group">
+<div class="bg-primary/10 text-primary w-16 h-16 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl">cloud_upload</span>
+</div>
+<p class="text-base font-bold mb-1">Drag and drop car photos here</p>
+<p class="text-sm text-slate-500">Or click to browse files (PNG, JPG up to 10MB)</p>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-4">
+<button class="text-slate-500 font-semibold hover:text-slate-700 transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined">arrow_back</span>
+                        Save for Later
+                    </button>
+<button class="bg-primary hover:bg-primary/90 text-white px-10 py-4 rounded-xl font-bold text-lg shadow-lg shadow-primary/25 transition-all flex items-center gap-2">
+                        Next: Photos &amp; Features
+                        <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Right Side: AI Price Suggestion -->
+<div class="lg:col-span-1 space-y-6">
+<div class="bg-gradient-to-br from-primary to-blue-700 rounded-xl p-6 text-white shadow-xl relative overflow-hidden">
+<div class="relative z-10">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined">auto_awesome</span>
+<span class="text-xs font-bold uppercase tracking-wider">Price Suggestion AI</span>
+</div>
+<p class="text-blue-100 text-sm mb-6">Based on current market data for a <span class="font-bold text-white">2023 Tesla Model 3</span> in California.</p>
+<div class="space-y-1 mb-6">
+<p class="text-xs text-blue-200 font-medium">Estimated Value</p>
+<div class="text-4xl font-black tracking-tight tabular-nums">
+                                $38,400 - $42,100
+                            </div>
+</div>
+<div class="bg-white/10 backdrop-blur-md rounded-lg p-4 border border-white/10">
+<div class="flex justify-between items-center mb-2">
+<span class="text-xs font-semibold">Demand Score</span>
+<span class="text-xs font-bold bg-green-400 text-green-950 px-2 py-0.5 rounded-full uppercase">High</span>
+</div>
+<div class="h-1.5 w-full bg-white/20 rounded-full overflow-hidden">
+<div class="h-full bg-green-400" style="width: 85%;"></div>
+</div>
+</div>
+</div>
+<!-- Decorative background shapes -->
+<div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+</div>
+<div class="bg-white dark:bg-[#182334] rounded-xl border border-slate-200 dark:border-slate-800 p-6">
+<h4 class="font-bold mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">info</span>
+                        Selling Tips
+                    </h4>
+<ul class="space-y-4">
+<li class="flex gap-3 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+<span class="material-symbols-outlined text-green-500 flex-shrink-0 text-lg">check_circle</span>
+                            Clean cars sell 30% faster. Give your car a wash before taking photos.
+                        </li>
+<li class="flex gap-3 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+<span class="material-symbols-outlined text-green-500 flex-shrink-0 text-lg">check_circle</span>
+                            High-quality photos from all angles increase buyer trust.
+                        </li>
+<li class="flex gap-3 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+<span class="material-symbols-outlined text-green-500 flex-shrink-0 text-lg">check_circle</span>
+                            Mention service history for a better price.
+                        </li>
+</ul>
+</div>
+<div class="p-6 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 bg-slate-300">
+<img class="w-full h-full object-cover" data-alt="Portrait of a professional sales consultant" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqk9m1JphNZxW4ShRutrLNOOOSejVrTJ9CmiB_KcviO42JykuUmvh8AYxMGhAZNsEbZMg9F-WGOoRfiS6ISuy6ZL1SVQ9JsTQs2hCLVcPNGuyBseliUSbGIVwYhJ8FaXUHvRWJRjrZO5DEPJVNHC1SuR9Pych7S4yDnZqKuXaAaLbL_CTakU5k_0hWyTbrH_CKs56XTghdkDxrVE6dO-QdSBrkzh42dH64lsoxtkku0X2K_cozX6fKaG4_0Pnv8PmJMktcJbfpc3po"/>
+</div>
+<div>
+<p class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-tighter">Need Help?</p>
+<p class="text-sm font-bold">Talk to a Vehicle Expert</p>
+</div>
+<button class="ml-auto w-10 h-10 rounded-full bg-white dark:bg-slate-900 flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-primary text-xl">chat</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer for context -->
+<footer class="mt-20 border-t border-slate-200 dark:border-slate-800 py-10 px-6">
+<div class="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex items-center gap-2 opacity-50 grayscale">
+<span class="material-symbols-outlined">directions_car</span>
+<span class="font-bold">Premium Motors</span>
+</div>
+<div class="flex gap-8 text-sm text-slate-500">
+<a class="hover:text-primary transition-colors" href="#">Terms</a>
+<a class="hover:text-primary transition-colors" href="#">Privacy</a>
+<a class="hover:text-primary transition-colors" href="#">Support</a>
+<a class="hover:text-primary transition-colors" href="#">Careers</a>
+</div>
+<p class="text-xs text-slate-400">© 2024 Premium Motors. Licensed in 50 states.</p>
+</div>
+</footer>
+</body></html>

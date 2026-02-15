@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mobile Home - Dark Mode | AutoPremium</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#3c83f6",
+                        "accent": "#22D3EE",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101722",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .cyan-glow:hover {
+            box-shadow: 0 0 15px rgba(34, 211, 238, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white transition-colors duration-300">
+<!-- Sticky Top Navigation -->
+<nav class="sticky top-0 z-50 w-full bg-background-dark/80 backdrop-blur-md border-b border-white/10 px-4 md:px-0">
+<div class="max-w-[480px] mx-auto h-16 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="text-accent">
+<span class="material-symbols-outlined text-3xl">electric_car</span>
+</div>
+<h1 class="text-xl font-black tracking-tight text-white">Auto<span class="text-accent">Premium</span></h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-white">search</span>
+</button>
+<button class="p-2 rounded-full hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-white">menu</span>
+</button>
+</div>
+</div>
+</nav>
+<!-- Main Content Container (Mobile-like Compact Desktop View) -->
+<main class="max-w-[480px] mx-auto pb-24">
+<!-- Hero Section -->
+<section class="relative h-[420px] w-full overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="Side profile of a sleek silver luxury sports car parked in a modern garage" style='background-image: linear-gradient(to bottom, rgba(16, 23, 34, 0.2), rgba(16, 23, 34, 1)), url("https://lh3.googleusercontent.com/aida-public/AB6AXuDgKTebwuyMGLidIr8fHY5wrOe6eFmkY74cKkQUSQpd51anIETvaGsECP2MRkCFEIBdObWpKihe0RV28Bibvs74UrIZ-M2gDdp_cDAwGuc0tw-OqXNakZkCtkDIoYkVE-uaeCnIeHsmoKJC-4SeCWljD44lOnKxNltc0duDvu-gPE4ZjW9bmHsLEfd6BJHuVNlvfmDgwyl7JwHtTfAMNGRZK4pOjNSU4oP8Q6qgmA0XFeMmwkK_kzZNzk0GqL-Fnnk5JgYm1CCWAwyz");'>
+</div>
+<div class="relative h-full flex flex-col justify-end p-6 gap-6">
+<div class="space-y-2">
+<h2 class="text-4xl font-black text-white leading-[1.1]">Find Your Next <br/><span class="text-accent">Journey</span></h2>
+<p class="text-slate-300 text-sm">Premium second-hand vehicles at your fingertips.</p>
+</div>
+<!-- Simplified Search Input -->
+<div class="flex flex-col gap-3">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-accent transition-colors">directions_car</span>
+<input class="w-full bg-slate-800/50 backdrop-blur-sm border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all" placeholder="Search by model or brand" type="text"/>
+</div>
+<button class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-2 cyan-glow">
+<span class="material-symbols-outlined text-xl">tune</span>
+                        Show Listings
+                    </button>
+</div>
+</div>
+</section>
+<!-- Category Chips (Horizontal Scroll) -->
+<section class="py-6 px-4">
+<h3 class="text-white font-bold mb-4 flex items-center justify-between">
+                Browse Body Type
+                <span class="text-accent text-xs font-medium cursor-pointer">See all</span>
+</h3>
+<div class="flex gap-3 overflow-x-auto no-scrollbar pb-2">
+<div class="flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl bg-accent text-slate-900 px-5 font-bold cursor-pointer">
+<span class="material-symbols-outlined text-sm">grid_view</span>
+<span class="text-sm">All</span>
+</div>
+<div class="flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl bg-white/5 border border-white/10 text-white px-5 font-medium hover:border-accent/50 cursor-pointer">
+<span class="material-symbols-outlined text-sm">airport_shuttle</span>
+<span class="text-sm">SUV</span>
+</div>
+<div class="flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl bg-white/5 border border-white/10 text-white px-5 font-medium hover:border-accent/50 cursor-pointer">
+<span class="material-symbols-outlined text-sm">bolt</span>
+<span class="text-sm">Electric</span>
+</div>
+<div class="flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl bg-white/5 border border-white/10 text-white px-5 font-medium hover:border-accent/50 cursor-pointer">
+<span class="material-symbols-outlined text-sm">directions_car</span>
+<span class="text-sm">Sedan</span>
+</div>
+<div class="flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl bg-white/5 border border-white/10 text-white px-5 font-medium hover:border-accent/50 cursor-pointer">
+<span class="material-symbols-outlined text-sm">sports_motorsports</span>
+<span class="text-sm">Coupe</span>
+</div>
+</div>
+</section>
+<!-- Featured Section Header -->
+<section class="px-4 pb-4">
+<h3 class="text-white text-xl font-bold">Top Picks for You</h3>
+<p class="text-slate-400 text-xs">Based on your recent searches</p>
+</section>
+<!-- Single-Column Vertical Cards -->
+<div class="px-4 space-y-6">
+<!-- Card 1 -->
+<div class="group relative bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-accent/30 transition-all cursor-pointer">
+<div class="relative aspect-[16/10] overflow-hidden">
+<div class="absolute top-3 left-3 z-10 bg-accent text-slate-900 text-[10px] font-black px-2 py-1 rounded uppercase tracking-wider">Verified</div>
+<button class="absolute top-3 right-3 z-10 bg-black/30 backdrop-blur-md p-2 rounded-full text-white hover:text-accent transition-colors">
+<span class="material-symbols-outlined text-lg">favorite</span>
+</button>
+<img alt="Dark grey Porsche Taycan parked in front of a modern architectural building" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Dark grey Porsche Taycan parked in front of a modern architectural building" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyAuLMcETOPrhbTktMV8ntz1aPhqiMMjXV4bkstr0Fl29CalcgpTVobXwzBBGHj0CmhWxNwyRQaUiD1xjcXImVnUhv0-_OTeJMAbJ4d5kQsf8udQfG9iIwQd8xLiMkAHc-2bkRfMfsonbwgJRWvcpKIaPWQiuz1xH3dgk_veX9Z0Izhm7IY-CktzuZId-qbSPNmIT9WYxOetYTA5dA6lpIz_ByKTsb_QB6aG73WElx-5e9bQ25_ehreN0H3vG8X-KqvE6p2uX28zRK"/>
+</div>
+<div class="p-4 space-y-3">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="text-white text-lg font-bold">2023 Porsche Taycan</h4>
+<div class="flex gap-2 mt-1">
+<span class="text-xs text-slate-400 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">speed</span>
+                                    12,400 mi
+                                </span>
+<span class="text-xs text-slate-400 flex items-center gap-1 border-l border-white/10 pl-2">
+<span class="material-symbols-outlined text-xs">ev_station</span>
+                                    Electric
+                                </span>
+</div>
+</div>
+<div class="text-right">
+<span class="text-accent text-xl font-black">$92,500</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-white/5">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-slate-700 overflow-hidden" data-alt="Small circular profile portrait of a professional car seller">
+<img alt="Seller profile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDovvgMTPrib2cWl9-22U9fjugulZQENZMBYXmUdie2-qYqfd9p8cOMtDsztvSgwNJBf5kFwjLjiRMFI0eCCwkGxPGaoujhFASNi3Q_tN74H3qYxWKIiREU2ItII9lAdw8f15gavcvZxT4qdL1NiT4-Ti3345x8q8ut-7Eke3Cs0bW93K_TKjPuO7sGQ_NRXJAGkV3Gjy7VqsVZIePkKGfNjAlkSFDXfRwR92Mk3zuIXQT64GpWaLSe9_TmBUTw7p9_Mi8qq1OFvbU_"/>
+</div>
+<span class="text-xs text-slate-300">LuxMotors Dallas</span>
+</div>
+<button class="text-primary text-xs font-bold hover:underline">View Details</button>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group relative bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-accent/30 transition-all cursor-pointer">
+<div class="relative aspect-[16/10] overflow-hidden">
+<div class="absolute top-3 left-3 z-10 bg-slate-100 text-slate-900 text-[10px] font-black px-2 py-1 rounded uppercase tracking-wider">Premium</div>
+<button class="absolute top-3 right-3 z-10 bg-black/30 backdrop-blur-md p-2 rounded-full text-white hover:text-accent transition-colors">
+<span class="material-symbols-outlined text-lg">favorite</span>
+</button>
+<img alt="Front view of a black BMW M5 parked in a studio setting" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Front view of a black BMW M5 parked in a studio setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCQ7WUIxi-BYOGINxa-BWGxYuVGJp2sOJgmfnA_azd99Wt8qzL3ArxWPfGYmB-7drQXqf8gHf2gSCyXGSgxzL80B5uVG2TiNlONaSj4O5Qv6J_Zr3iRCHIZPF_cf66A4jby4A7OVhSqRRUxZLpK-yWLZt-ZCbmfbt1exLfnDzA5np35rkd3Kb0ZGqdImZrPi3-GbBX4V5i0y8DPlz3i8H7K8FU9j_Fi0LXHAdG6ldJr2nvpirp6Y7XteiidlOMwCx74JsD4i7v8oM-"/>
+</div>
+<div class="p-4 space-y-3">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="text-white text-lg font-bold">2022 BMW M5 CS</h4>
+<div class="flex gap-2 mt-1">
+<span class="text-xs text-slate-400 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">speed</span>
+                                    8,200 mi
+                                </span>
+<span class="text-xs text-slate-400 flex items-center gap-1 border-l border-white/10 pl-2">
+<span class="material-symbols-outlined text-xs">settings_input_component</span>
+                                    Automatic
+                                </span>
+</div>
+</div>
+<div class="text-right">
+<span class="text-accent text-xl font-black">$142,000</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-white/5">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-slate-700 overflow-hidden" data-alt="Small circular profile portrait of a dealership employee">
+<img alt="Seller profile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-Ax3BCLTPhwY4mjIDVyvNcnT2Zs4yryacQt5i4NxW20hLlzniwWVwj8XUbolIR-SMB6H3L4SfR7Bf_MaSsXk4vxo6Tmb_6QIggpQl4sAsjn4IpGOn2duFO_7MYUnGjRC-rIZCaMF9HWFVlRcq-jm9f39UnsK1hiu4USndbrbZyzX3zJKCzwfSabZMROoKoTuBEWhTKK_0ZxUj45JJpA9PtU8pQpE29KhZNGr1Gk8TpGnylLV2jqzO9Imd5RQvPR42PK73KGEeFBXO"/>
+</div>
+<span class="text-xs text-slate-300">Prestige Autos</span>
+</div>
+<button class="text-primary text-xs font-bold hover:underline">View Details</button>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group relative bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-accent/30 transition-all cursor-pointer">
+<div class="relative aspect-[16/10] overflow-hidden">
+<button class="absolute top-3 right-3 z-10 bg-black/30 backdrop-blur-md p-2 rounded-full text-white hover:text-accent transition-colors">
+<span class="material-symbols-outlined text-lg">favorite</span>
+</button>
+<img alt="Audi RS6 Avant driving on a winding mountain road" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Audi RS6 Avant driving on a winding mountain road" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgCLlZoj8VrkLge895P_xXQTh7XlYBA9swvDroiRAVEPUrG7cB1nu-PTvAcFBa_elEyC4w-A_n7dH0kKRtWWE70IIL2vss6NXzGCYdMRro56ZYPlYSkRtFmlfBTxnwg2Y6qCiVGJZp5A2Q9SVWyfieFieq3pt-9_imbtwknAOqpJWBtHWz2MA3llb0EyhhDP_cMZcLuWN-VvMtwoRx0vfGuz80HYG_PLw8bfNntZoozq-oirdDMxLqyyozzjZJ3bj9Uw1anuCHLWro"/>
+</div>
+<div class="p-4 space-y-3">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="text-white text-lg font-bold">2021 Audi RS6 Avant</h4>
+<div class="flex gap-2 mt-1">
+<span class="text-xs text-slate-400 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">speed</span>
+                                    24,500 mi
+                                </span>
+<span class="text-xs text-slate-400 flex items-center gap-1 border-l border-white/10 pl-2">
+<span class="material-symbols-outlined text-xs">local_gas_station</span>
+                                    Hybrid
+                                </span>
+</div>
+</div>
+<div class="text-right">
+<span class="text-accent text-xl font-black">$108,900</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-white/5">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-slate-700 overflow-hidden" data-alt="Small circular profile portrait of a car owner">
+<img alt="Seller profile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLw1BHAt4IqJwAeu7MpkwA36Pjld-gb3NUnLSWqDjBYZ07UU0uKRLndbHogPYc9plwQxwaa9xl5KeHUC-5ijRG50qwyWJmD7_gMM_UUrW72qJc1CccML9WogKRVEhyCed5FX8-xrA5q8TAeTSZjAQHp0oZSG06U-mr4Te0lC7ri5i-HNN_3JR753fw8o2_SQvN02k8qiyXLfekDWdRa8fgp-Pnu-dIC1LDXdxxXP9coEGieYCyuZk1C6SbRYvoh6Y8uAfzQWQxBl2_"/>
+</div>
+<span class="text-xs text-slate-300">Private Seller</span>
+</div>
+<button class="text-primary text-xs font-bold hover:underline">View Details</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Featured Collections -->
+<section class="py-10 px-4">
+<h3 class="text-white font-bold mb-4">Popular Collections</h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="relative h-24 rounded-xl overflow-hidden group cursor-pointer" data-alt="Abstract gradient showing electric blue streaks">
+<div class="absolute inset-0 bg-gradient-to-br from-blue-600 to-accent/40"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="text-white font-bold text-sm">Electric Future</span>
+</div>
+</div>
+<div class="relative h-24 rounded-xl overflow-hidden group cursor-pointer" data-alt="Abstract gradient showing orange and red tones">
+<div class="absolute inset-0 bg-gradient-to-br from-red-600 to-orange-400/40"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="text-white font-bold text-sm">Muscle Cars</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Floating Action Button (FAB) -->
+<div class="fixed bottom-6 right-6 z-50 max-w-[480px]">
+<button class="bg-accent text-slate-900 size-14 rounded-full flex items-center justify-center shadow-2xl cyan-glow transition-all hover:scale-110">
+<span class="material-symbols-outlined text-3xl font-bold">add</span>
+</button>
+</div>
+<!-- Mobile Bottom Tab Bar (Visible on compact desktop) -->
+<footer class="fixed bottom-0 left-0 right-0 bg-background-dark/95 backdrop-blur-lg border-t border-white/5 z-40">
+<div class="max-w-[480px] mx-auto flex items-center justify-around h-16 px-4">
+<div class="flex flex-col items-center gap-1 text-accent">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-bold">Home</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-slate-500 hover:text-white transition-colors cursor-pointer">
+<span class="material-symbols-outlined">explore</span>
+<span class="text-[10px] font-medium">Explore</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-slate-500 hover:text-white transition-colors cursor-pointer">
+<span class="material-symbols-outlined">sell</span>
+<span class="text-[10px] font-medium">Sell</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-slate-500 hover:text-white transition-colors cursor-pointer">
+<span class="material-symbols-outlined">chat_bubble</span>
+<span class="text-[10px] font-medium">Messages</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-slate-500 hover:text-white transition-colors cursor-pointer">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-medium">Profile</span>
+</div>
+</div>
+</footer>
+</body></html>
