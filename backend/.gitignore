@@ -1,0 +1,49 @@
+## [Visual Studio]
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## [Build Artifacts]
+bin/
+obj/
+[Ee]bug/
+[Rr]elease/
+x64/
+x86/
+build/
+
+## [Environment-specific Settings]
+appsettings.Development.json
+
+## [Publish]
+publish/
+*.azurepubxml
+
+## [Temporary/Generated Files]
+*.log
+*.tmp
+*.bak
+*.swp
+*~
+.DS_Store
+
+## [Entity Framework]
+Migrations/
+# Optional: Usually you want to keep Migrations in Git, 
+# but if you use a different strategy, you might ignore them.
+# Keeping them for now as per project structure.
+
+## [User-specific files]
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+## [Dotnet]
+project.lock.json
+project.fragment.lock.json
+artifacts/
