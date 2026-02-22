@@ -16,7 +16,7 @@ namespace SecondHandCarSellingAPI.Controllers
         {
             _context = context;
         }
-
+        
         #region Get All Users
 
         //[HttpGet]
