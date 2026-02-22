@@ -60,6 +60,11 @@
             RuleFor(x => x.Description)
                 .MaximumLength(500)
                 .WithMessage("Description cannot exceed 500 characters");
+
+            RuleFor(x => x.ContactNumber)
+                .NotEmpty()
+                .MaximumLength(20)
+                .WithMessage("Contact number is required and cannot exceed 20 characters");
         }
     }
 

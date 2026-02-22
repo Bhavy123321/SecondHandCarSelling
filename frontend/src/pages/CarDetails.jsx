@@ -14,6 +14,7 @@ import {
   Trash2,
   Shield,
   Info,
+  Phone,
 } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
@@ -91,7 +92,7 @@ const CarDetails = () => {
 
   if (error)
     return (
-      <civ className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
+      <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
         <Alert variant="destructive" className="max-w-md">
           <AlertDescription>{error}</AlertDescription>
         </Alert>
@@ -101,7 +102,7 @@ const CarDetails = () => {
           </Button>
           <Button onClick={() => navigate("/")}>Back to Home</Button>
         </div>
-      </civ>
+      </div>
     );
 
   if (!car) return <div className="text-center py-20">Car not found.</div>;
@@ -226,6 +227,25 @@ const CarDetails = () => {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Contact Number Card - Only show for available cars or owner/admin */}
+            {(car.statusName === "Available" || isOwner || user?.role === "Admin") && car.contactNumber && (
+              <Card className="bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-900">
+                <CardContent className="flex items-center gap-4 p-6">
+                  <div className="h-12 w-12 rounded-full bg-green-500/10 flex items-center justify-center">
+                    <Phone className="h-6 w-6 text-green-600 dark:text-green-400" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-green-600 dark:text-green-400 uppercase">
+                      Contact Seller
+                    </p>
+                    <p className="font-bold text-lg leading-tight text-green-700 dark:text-green-300">
+                      {car.contactNumber}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Actions */}
             <div className="space-y-3">

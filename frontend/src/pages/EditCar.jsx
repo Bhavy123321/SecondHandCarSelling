@@ -34,6 +34,7 @@ const EditCar = () => {
     fuelType: "Petrol",
     transmission: "Automatic",
     description: "",
+    contactNumber: "",
     userId: user?.userId,
   });
 
@@ -43,6 +44,21 @@ const EditCar = () => {
     { id: 3, name: "Mercedes" },
     { id: 4, name: "Tesla" },
     { id: 5, name: "Porsche" },
+    { id: 6, name: "Toyota" },
+    { id: 7, name: "Honda" },
+    { id: 8, name: "Ford" },
+    { id: 9, name: "Chevrolet" },
+    { id: 10, name: "Volkswagen" },
+    { id: 11, name: "Nissan" },
+    { id: 12, name: "Hyundai" },
+    { id: 13, name: "Kia" },
+    { id: 14, name: "Lexus" },
+    { id: 15, name: "Jaguar" },
+    { id: 16, name: "Land Rover" },
+    { id: 17, name: "Volvo" },
+    { id: 18, name: "Mazda" },
+    { id: 19, name: "Subaru" },
+    { id: 20, name: "Jeep" },
   ];
 
   useEffect(() => {
@@ -63,6 +79,7 @@ const EditCar = () => {
           fuelType: car.fuelType,
           transmission: car.transmission,
           description: car.description || "",
+          contactNumber: car.contactNumber || "",
           userId: user?.userId,
         });
       } catch (error) {
@@ -98,6 +115,7 @@ const EditCar = () => {
         fuelType: formData.fuelType,
         transmission: formData.transmission,
         description: formData.description,
+        contactNumber: formData.contactNumber,
       };
 
       await api.put(`/Car/${id}`, payload);
@@ -241,6 +259,20 @@ const EditCar = () => {
                   <option value="Manual">Manual</option>
                 </Select>
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="contactNumber">Contact Number</Label>
+              <Input
+                id="contactNumber"
+                type="tel"
+                value={formData.contactNumber}
+                onChange={handleChange}
+                required
+              />
+              <p className="text-xs text-muted-foreground">
+                This number will be displayed to potential buyers so they can contact you.
+              </p>
             </div>
 
             <div className="space-y-2">

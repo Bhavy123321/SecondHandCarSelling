@@ -91,6 +91,29 @@ namespace SecondHandCarSellingAPI.Controllers
 
         #endregion
 
+        #region Add New Car Images with URL
+
+        [HttpPost("url")]
+        public async Task<IActionResult> AddCarImageWithUrl([FromBody] CreateCarImageUrlDTO createDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var images = new CarImagesModel
+            {
+                CarId = createDto.CarId,
+                ImageUrl = createDto.ImageUrl,
+                CreatedDate = DateTime.Now
+            };
+
+            _context.CarImages.Add(images);
+            await _context.SaveChangesAsync();
+
+            return Ok(images);
+        }
+
+        #endregion
+
         #region Update Car Images
 
         [HttpPut("{id}")]

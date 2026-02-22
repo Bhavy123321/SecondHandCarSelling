@@ -25,6 +25,12 @@ namespace SecondHandCarSellingAPI.Models
         public IFormFile ImageUrl { get; set; }
     }
 
+    public class CreateCarImageUrlDTO
+    {
+        public int CarId { get; set; }
+        public string ImageUrl { get; set; }
+    }
+
     public class UpdateCarImageDTO
     {
         public IFormFile? ImageUrl { get; set; }

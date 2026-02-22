@@ -31,6 +31,10 @@ namespace SecondHandCarSellingAPI.Models
 
         [StringLength(500)]
         public string? Description { get; set; }
+
+        [Required, MaxLength(20)]
+        public string ContactNumber { get; set; }
+
         public DateTime CreatedDate { get; set; } = DateTime.Now;
         public DateTime? ModifiedDate { get; set; }
 
@@ -69,6 +73,8 @@ namespace SecondHandCarSellingAPI.Models
         public string Transmission { get; set; }
 
         public string? Description { get; set; }
+
+        public string ContactNumber { get; set; }
     }
 
     public class CarResponseDTO
@@ -88,6 +94,8 @@ namespace SecondHandCarSellingAPI.Models
         public string StatusName { get; set; }
         public string UserName { get; set; }
         public string? ImageUrl { get; set; }
+
+        public string ContactNumber { get; set; }
 
         public DateTime CreatedDate { get; set; }
     }

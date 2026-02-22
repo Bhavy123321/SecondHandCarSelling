@@ -15,13 +15,14 @@ import { Label } from "../components/ui/label";
 import { Select } from "../components/ui/select";
 import { Textarea } from "../components/ui/textarea";
 import { Alert, AlertDescription, AlertTitle } from "../components/ui/alert";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Image as ImageIcon, Link as LinkIcon } from "lucide-react";
 
 const AddCar = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [imageInputType, setImageInputType] = useState("url"); // 'url' or 'file'
   const [formData, setFormData] = useState({
     title: "",
     model: "",
@@ -33,8 +34,10 @@ const AddCar = () => {
     fuelType: "Petrol",
     transmission: "Automatic",
     description: "",
+    contactNumber: "",
     userId: user?.userId,
     imageId: 1,
+    imageUrl: "",
   });
 
   const brands = [
@@ -43,6 +46,21 @@ const AddCar = () => {
     { id: 3, name: "Mercedes" },
     { id: 4, name: "Tesla" },
     { id: 5, name: "Porsche" },
+    { id: 6, name: "Toyota" },
+    { id: 7, name: "Honda" },
+    { id: 8, name: "Ford" },
+    { id: 9, name: "Chevrolet" },
+    { id: 10, name: "Volkswagen" },
+    { id: 11, name: "Nissan" },
+    { id: 12, name: "Hyundai" },
+    { id: 13, name: "Kia" },
+    { id: 14, name: "Lexus" },
+    { id: 15, name: "Jaguar" },
+    { id: 16, name: "Land Rover" },
+    { id: 17, name: "Volvo" },
+    { id: 18, name: "Mazda" },
+    { id: 19, name: "Subaru" },
+    { id: 20, name: "Jeep" },
   ];
 
   const handleChange = (e) => {
@@ -65,7 +83,23 @@ const AddCar = () => {
         imageId: 1,
       };
 
-      await api.post("/Car", payload);
+      // First create the car
+      const carResponse = await api.post("/Car", payload);
+      const carId = carResponse.data.carId;
+
+      // If image URL is provided, create the car image
+      if (formData.imageUrl && formData.imageUrl.trim() !== "") {
+        try {
+          await api.post("/CarImages/url", {
+            carId: carId,
+            imageUrl: formData.imageUrl,
+          });
+        } catch (imgError) {
+          console.error("Error adding image:", imgError);
+          // Don't fail the whole operation if image fails
+        }
+      }
+
       setLoading(false);
       navigate("/");
     } catch (error) {
@@ -197,6 +231,20 @@ const AddCar = () => {
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="contactNumber">Contact Number</Label>
+              <Input
+                id="contactNumber"
+                type="tel"
+                placeholder="e.g. +1 234 567 8900"
+                onChange={handleChange}
+                required
+              />
+              <p className="text-xs text-muted-foreground">
+                This number will be displayed to potential buyers so they can contact you.
+              </p>
+            </div>
+
+            <div className="space-y-2">
               <Label htmlFor="description">Description</Label>
               <Textarea
                 id="description"
@@ -204,6 +252,44 @@ const AddCar = () => {
                 placeholder="Tell us about the car..."
                 onChange={handleChange}
               />
+            </div>
+
+            {/* Image URL Input */}
+            <div className="space-y-3 border rounded-lg p-4 bg-muted/30">
+              <div className="flex items-center gap-2">
+                <ImageIcon className="h-5 w-5 text-primary" />
+                <Label className="text-base font-semibold">Car Image</Label>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="imageUrl" className="flex items-center gap-2">
+                  <LinkIcon className="h-4 w-4" />
+                  Image URL
+                </Label>
+                <Input
+                  id="imageUrl"
+                  type="url"
+                  placeholder="https://example.com/car-image.jpg"
+                  onChange={handleChange}
+                />
+                <p className="text-xs text-muted-foreground">
+                  Enter a direct URL to an image of your car (optional).
+                </p>
+              </div>
+
+              {formData.imageUrl && (
+                <div className="mt-4">
+                  <p className="text-sm font-medium mb-2">Preview:</p>
+                  <img
+                    src={formData.imageUrl}
+                    alt="Car preview"
+                    className="w-full max-w-md h-48 object-cover rounded-lg border"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                    }}
+                  />
+                </div>
+              )}
             </div>
 
             <Button

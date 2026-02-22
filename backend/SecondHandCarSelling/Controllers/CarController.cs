@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 using SecondHandCarSellingAPI.Data;
 using SecondHandCarSellingAPI.Models;
 using Microsoft.AspNetCore.Http;
@@ -45,7 +45,8 @@ namespace SecondHandCarSellingAPI.Controllers
                     BrandName = c.Brand.BrandName,
                     StatusName = c.Status.StatusName,
                     UserName = c.User.UserName,
-                    ImageUrl = _context.CarImages.Where(i => i.CarId == c.CarId).Select(i => i.ImageUrl).FirstOrDefault()
+                    ImageUrl = _context.CarImages.Where(i => i.CarId == c.CarId).Select(i => i.ImageUrl).FirstOrDefault(),
+                    ContactNumber = c.ContactNumber
                 })
                 .ToListAsync();
 
@@ -80,7 +81,8 @@ namespace SecondHandCarSellingAPI.Controllers
                     BrandName = c.Brand.BrandName,
                     StatusName = c.Status.StatusName,
                     UserName = c.User.UserName,
-                    ImageUrl = _context.CarImages.Where(i => i.CarId == c.CarId).Select(i => i.ImageUrl).FirstOrDefault()
+                    ImageUrl = _context.CarImages.Where(i => i.CarId == c.CarId).Select(i => i.ImageUrl).FirstOrDefault(),
+                    ContactNumber = c.ContactNumber
                 })
                 .FirstOrDefaultAsync();
 
@@ -147,7 +149,8 @@ namespace SecondHandCarSellingAPI.Controllers
                     BrandName = c.Brand.BrandName,
                     StatusName = c.Status.StatusName,
                     UserName = c.User.UserName,
-                    ImageUrl = _context.CarImages.Where(i => i.CarId == c.CarId).Select(i => i.ImageUrl).FirstOrDefault()
+                    ImageUrl = _context.CarImages.Where(i => i.CarId == c.CarId).Select(i => i.ImageUrl).FirstOrDefault(),
+                    ContactNumber = c.ContactNumber
                 })
                 .ToListAsync();
 
@@ -182,7 +185,8 @@ namespace SecondHandCarSellingAPI.Controllers
                     BrandName = c.Brand.BrandName,
                     StatusName = c.Status.StatusName,
                     UserName = c.User.UserName,
-                    ImageUrl = _context.CarImages.Where(i => i.CarId == c.CarId).Select(i => i.ImageUrl).FirstOrDefault()
+                    ImageUrl = _context.CarImages.Where(i => i.CarId == c.CarId).Select(i => i.ImageUrl).FirstOrDefault(),
+                    ContactNumber = c.ContactNumber
                 })
                 .ToListAsync();
 
@@ -212,6 +216,7 @@ namespace SecondHandCarSellingAPI.Controllers
                 FuelType = dto.FuelType,
                 Transmission = dto.Transmission,
                 Description = dto.Description,
+                ContactNumber = dto.ContactNumber,
                 CreatedDate = DateTime.Now
             };
 
@@ -246,6 +251,7 @@ namespace SecondHandCarSellingAPI.Controllers
             existingCar.FuelType = car.FuelType;
             existingCar.Transmission = car.Transmission;
             existingCar.Description = car.Description;
+            existingCar.ContactNumber = car.ContactNumber;
             existingCar.ModifiedDate = DateTime.Now;
 
             await _context.SaveChangesAsync();
