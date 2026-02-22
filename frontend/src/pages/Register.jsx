@@ -121,7 +121,7 @@ const Register = () => {
                 <Label htmlFor="userName">Username</Label>
                 <Input
                   id="userName"
-                  placeholder="johndoe"
+                  placeholder="username"
                   value={formData.userName}
                   onChange={handleChange}
                   required
