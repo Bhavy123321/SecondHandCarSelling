@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../services/api";
-import { Trash2, UserCircle, Shield, Search } from "lucide-react";
+import { Trash2, UserCircle, Shield, Search, Plus, X, Pencil } from "lucide-react";
 import { Button } from "../components/ui/button";
 import {
   Table,
@@ -27,6 +27,22 @@ const AdminUsers = () => {
   const [error, setError] = useState(null);
   const [search, setSearch] = useState("");
 
+  // Modal State
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState("create"); // 'create' or 'edit'
+  const [editingUserId, setEditingUserId] = useState(null);
+
+  // Form State
+  const [formData, setFormData] = useState({
+    userName: "",
+    email: "",
+    password: "", // Only used for create
+    phone: "",
+    role: "Buyer",
+  });
+  const [formLoading, setFormLoading] = useState(false);
+  const [formError, setFormError] = useState(null);
+
   const fetchUsers = async () => {
     try {
       setLoading(true);
@@ -52,9 +68,74 @@ const AdminUsers = () => {
     try {
       await api.delete(`/User/${userId}`);
       setUsers(users.filter((u) => u.userId !== userId));
+      alert(`User "${userName}" deleted successfully.`);
     } catch (error) {
       console.error("Error deleting user", error);
-      alert("Failed to delete user");
+      alert("Failed to delete user. Please try again.");
+    }
+  };
+
+  const openCreateModal = () => {
+    setModalMode("create");
+    setEditingUserId(null);
+    setFormData({ userName: "", email: "", password: "", phone: "", role: "Buyer" });
+    setFormError(null);
+    setIsModalOpen(true);
+  };
+
+  const openEditModal = (user) => {
+    setModalMode("edit");
+    setEditingUserId(user.userId);
+    setFormData({
+      userName: user.userName,
+      email: user.email,
+      password: "", // Not updated directly here, or kept empty
+      phone: user.phone || "",
+      role: user.role,
+    });
+    setFormError(null);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setFormLoading(true);
+    setFormError(null);
+
+    try {
+      if (modalMode === "create") {
+        await api.post("/User", formData);
+        // Refetch to get the new user with the generated ID
+        await fetchUsers();
+      } else {
+        const payload = {
+          userName: formData.userName,
+          email: formData.email,
+          phone: formData.phone,
+          role: formData.role
+        };
+        await api.put(`/User/${editingUserId}`, payload);
+        await fetchUsers(); // Refresh to reflect changes
+      }
+      closeModal();
+    } catch (error) {
+      console.error("Error saving user", error);
+      if (error.response && error.response.data && error.response.data.message) {
+        setFormError(error.response.data.message);
+      } else {
+        setFormError("Failed to save user. Please check your inputs.");
+      }
+    } finally {
+      setFormLoading(false);
     }
   };
 
@@ -100,14 +181,20 @@ const AdminUsers = () => {
             Manage platform users and roles.
           </p>
         </div>
-        <div className="relative max-w-sm w-full">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search users by name or email..."
-            className="pl-9"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <div className="relative w-full sm:w-64">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search users..."
+              className="pl-9"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+          <Button onClick={openCreateModal} className="shrink-0 gap-2">
+            <Plus className="h-4 w-4" />
+            <span className="hidden sm:inline">Add User</span>
+          </Button>
         </div>
       </div>
 
@@ -162,16 +249,29 @@ const AdminUsers = () => {
                           {new Date(user.createdDate).toLocaleDateString()}
                         </TableCell>
                         <TableCell className="text-right">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                            onClick={() =>
-                              handleDelete(user.userId, user.userName)
-                            }
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
+                          <div className="flex justify-end gap-2">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                              onClick={() => openEditModal(user)}
+                              title="Edit User"
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                              onClick={() =>
+                                handleDelete(user.userId, user.userName)
+                              }
+                              title="Delete User"
+                              disabled={user.role === "Admin" && user.userName === "admin"} // Prevent deleting root admin
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))
@@ -191,6 +291,97 @@ const AdminUsers = () => {
           )}
         </CardContent>
       </Card>
+
+      {/* Custom Modal for Create/Edit using Tailwind */}
+      {
+        isModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+            <div className="bg-background rounded-lg shadow-lg w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
+              <div className="flex items-center justify-between p-4 border-b">
+                <h2 className="text-lg font-semibold">
+                  {modalMode === "create" ? "Add New User" : "Edit User"}
+                </h2>
+                <Button variant="ghost" size="icon" onClick={closeModal} className="h-8 w-8 rounded-full">
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="p-4 overflow-y-auto">
+                <form id="user-form" onSubmit={handleSubmit} className="space-y-4">
+                  {formError && (
+                    <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
+                      {formError}
+                    </div>
+                  )}
+                  <div className="space-y-1">
+                    <label className="text-sm font-medium">Username</label>
+                    <Input
+                      name="userName"
+                      value={formData.userName}
+                      onChange={handleInputChange}
+                      required
+                      placeholder="johndoe"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-sm font-medium">Email</label>
+                    <Input
+                      name="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      required
+                      placeholder="john@example.com"
+                    />
+                  </div>
+                  {modalMode === "create" && (
+                    <div className="space-y-1">
+                      <label className="text-sm font-medium">Password</label>
+                      <Input
+                        name="password"
+                        type="text"
+                        value={formData.password}
+                        onChange={handleInputChange}
+                        required
+                        placeholder="Secure password"
+                      />
+                    </div>
+                  )}
+                  <div className="space-y-1">
+                    <label className="text-sm font-medium">Phone</label>
+                    <Input
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      placeholder="+1 234 567 8900"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-sm font-medium">Role</label>
+                    <select
+                      name="role"
+                      value={formData.role}
+                      onChange={handleInputChange}
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      <option value="Buyer">Buyer</option>
+                      <option value="Seller">Seller</option>
+                      <option value="Admin">Admin</option>
+                    </select>
+                  </div>
+                </form>
+              </div>
+              <div className="p-4 border-t bg-muted/20 flex justify-end gap-2">
+                <Button type="button" variant="outline" onClick={closeModal} disabled={formLoading}>
+                  Cancel
+                </Button>
+                <Button type="submit" form="user-form" disabled={formLoading}>
+                  {formLoading ? "Saving..." : "Save User"}
+                </Button>
+              </div>
+            </div>
+          </div>
+        )
+      }
     </div>
   );
 };

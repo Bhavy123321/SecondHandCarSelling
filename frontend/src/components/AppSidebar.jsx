@@ -106,6 +106,7 @@ const AppSidebar = ({ isOpen, onClose }) => {
             />
             <NavItem to="/admin/users" label="Manage Users" icon={Users} />
             <NavItem to="/admin/cars" label="Manage Cars" icon={Car} />
+            <NavItem to="/admin/settings" label="System Settings" icon={Settings} />
           </>
         )}
       </div>

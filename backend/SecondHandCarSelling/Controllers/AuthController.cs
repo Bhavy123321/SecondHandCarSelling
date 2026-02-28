@@ -44,5 +44,23 @@ namespace SecondHandCarSellingAPI.Controllers
                 }
             });
         }
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto resetPasswordDto)
+        {
+            var user = await _context.User
+                .FirstOrDefaultAsync(u => u.UserName == resetPasswordDto.UserName && u.Email == resetPasswordDto.Email);
+
+            if (user == null)
+            {
+                return NotFound("Could not verify user. Invalid username or email.");
+            }
+
+            user.Password = resetPasswordDto.NewPassword;
+            user.ModifiedDate = DateTime.Now;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Password reset successfully" });
+        }
     }
 }

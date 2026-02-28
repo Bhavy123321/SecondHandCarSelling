@@ -155,16 +155,17 @@ const BuyCar = () => {
             <form onSubmit={handlePurchase} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="payment">Payment Method</Label>
-                <Select
+                <select
                   id="payment"
                   value={paymentMethod}
                   onChange={(e) => setPaymentMethod(e.target.value)}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   <option value="Cash">Cash Payment</option>
                   <option value="Bank Transfer">Bank Transfer</option>
                   <option value="Credit Card">Credit Card</option>
                   <option value="Financing">Financing</option>
-                </Select>
+                </select>
               </div>
 
               <Alert className="bg-blue-50 dark:bg-blue-900/20 border-blue-100 dark:border-blue-900 text-blue-800 dark:text-blue-300">

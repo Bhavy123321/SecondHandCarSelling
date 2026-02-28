@@ -7,12 +7,14 @@ import {
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword";
 import Home from "./pages/Home";
 import AddCar from "./pages/AddCar";
 import CarDetails from "./pages/CarDetails";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminUsers from "./pages/AdminUsers";
 import AdminCars from "./pages/AdminCars";
+import AdminSettings from "./pages/AdminSettings";
 import BuyerDashboard from "./pages/BuyerDashboard";
 import SellerDashboard from "./pages/SellerDashboard";
 import MyListings from "./pages/MyListings";
@@ -52,6 +54,7 @@ const App = () => {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
 
           {/* Role-based home dashboard */}
           <Route
@@ -158,6 +161,16 @@ const App = () => {
               <AdminRoute>
                 <Layout>
                   <AdminCars />
+                </Layout>
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/settings"
+            element={
+              <AdminRoute>
+                <Layout>
+                  <AdminSettings />
                 </Layout>
               </AdminRoute>
             }
