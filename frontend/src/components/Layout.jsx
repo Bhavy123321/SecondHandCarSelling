@@ -37,14 +37,18 @@ const Layout = ({ children }) => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-muted/20 flex font-sans antialiased text-foreground">
+    <div className="min-h-screen bg-muted/10 dark:bg-slate-950/20 relative flex font-sans antialiased text-foreground overflow-hidden">
+      {/* Premium Ambient Glowing Background Orbs */}
+      <div className="absolute top-[-20%] left-[-20%] w-[50%] h-[50%] rounded-full bg-primary/5 dark:bg-primary/8 blur-[150px] pointer-events-none z-0" />
+      <div className="absolute bottom-[-20%] right-[-20%] w-[50%] h-[50%] rounded-full bg-baltic-blue-500/5 dark:bg-baltic-blue-500/8 blur-[150px] pointer-events-none z-0" />
+
       {/* Sidebar Navigation */}
       <AppSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden z-10 relative">
         {/* Mobile Header / Top Bar */}
-        <header className="flex items-center gap-4 border-b bg-background/95 backdrop-blur px-6 h-16 shrink-0 sticky top-0 z-20">
+        <header className="flex items-center gap-4 border-b bg-background/80 backdrop-blur px-6 h-16 shrink-0 sticky top-0 z-20">
           <Button
             variant="ghost"
             size="icon"
@@ -61,7 +65,7 @@ const Layout = ({ children }) => {
             variant="ghost"
             size="icon"
             onClick={toggleTheme}
-            className="rounded-full"
+            className="rounded-full hover:bg-muted/80 transition-colors"
           >
             {isDarkMode ? (
               <Sun className="size-5" />
@@ -72,8 +76,8 @@ const Layout = ({ children }) => {
         </header>
 
         {/* Page Content Scrollable Area */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-8">
-          <div className="mx-auto max-w-6xl animate-in fade-in duration-500">
+        <main className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar">
+          <div className="mx-auto max-w-6xl animate-in fade-in slide-in-from-bottom-4 duration-500">
             {children}
           </div>
         </main>

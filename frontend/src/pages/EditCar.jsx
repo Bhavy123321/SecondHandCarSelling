@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import api from "../services/api";
 import { useAuth } from "../context/AuthContext";
-import { ArrowLeft, AlertCircle } from "lucide-react";
+import { ArrowLeft, AlertCircle, Sparkles, Eye, Info, Link as LinkIcon } from "lucide-react";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
+  CardDescription,
 } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -15,6 +16,7 @@ import { Label } from "../components/ui/label";
 import { Select } from "../components/ui/select";
 import { Textarea } from "../components/ui/textarea";
 import { Alert, AlertDescription, AlertTitle } from "../components/ui/alert";
+import { motion } from "framer-motion";
 
 const EditCar = () => {
   const { id } = useParams();
@@ -36,43 +38,34 @@ const EditCar = () => {
     description: "",
     contactNumber: "",
     userId: user?.userId,
+    imageId: 1,
+    imageUrl: "",
   });
 
-  const brands = [
-    { id: 1, name: "BMW" },
-    { id: 2, name: "Audi" },
-    { id: 3, name: "Mercedes" },
-    { id: 4, name: "Tesla" },
-    { id: 5, name: "Porsche" },
-    { id: 6, name: "Toyota" },
-    { id: 7, name: "Honda" },
-    { id: 8, name: "Ford" },
-    { id: 9, name: "Chevrolet" },
-    { id: 10, name: "Volkswagen" },
-    { id: 11, name: "Nissan" },
-    { id: 12, name: "Hyundai" },
-    { id: 13, name: "Kia" },
-    { id: 14, name: "Lexus" },
-    { id: 15, name: "Jaguar" },
-    { id: 16, name: "Land Rover" },
-    { id: 17, name: "Volvo" },
-    { id: 18, name: "Mazda" },
-    { id: 19, name: "Subaru" },
-    { id: 20, name: "Jeep" },
-  ];
+  const [brands, setBrands] = useState([]);
+  const [statuses, setStatuses] = useState([]);
 
   useEffect(() => {
-    const fetchCar = async () => {
+    const fetchData = async () => {
       try {
-        const response = await api.get(`/Car/${id}`);
-        const car = response.data;
-        const brandId = brands.find((b) => b.name === car.brandName)?.id || 1;
+        const [carRes, brandsRes, statusRes] = await Promise.all([
+          api.get(`/Car/${id}`),
+          api.get("/CarBrands"),
+          api.get("/CarStatus")
+        ]);
+
+        const car = carRes.data;
+        const brandsData = brandsRes.data.map(b => ({ id: b.brandId, name: b.brandName }));
+        const statusData = statusRes.data.map(s => ({ id: s.statusId, name: s.statusName }));
+        
+        setBrands(brandsData);
+        setStatuses(statusData);
 
         setFormData({
           title: car.title,
           model: car.model,
-          brandId: brandId,
-          statusId: 1,
+          brandId: car.brandId,
+          statusId: car.statusId,
           year: car.year,
           price: car.price,
           mileage: car.mileage,
@@ -81,15 +74,17 @@ const EditCar = () => {
           description: car.description || "",
           contactNumber: car.contactNumber || "",
           userId: user?.userId,
+          imageId: car.imageId || 1,
+          imageUrl: car.imageUrl || "",
         });
       } catch (error) {
-        console.error("Error fetching car:", error);
+        console.error("Error fetching data:", error);
         setError("Failed to load car details");
       } finally {
         setLoading(false);
       }
     };
-    fetchCar();
+    fetchData();
   }, [id]);
 
   const handleChange = (e) => {
@@ -103,19 +98,19 @@ const EditCar = () => {
 
     try {
       const payload = {
-        carId: parseInt(id),
-        userId: user.userId,
-        brandId: parseInt(formData.brandId),
-        statusId: 1,
-        title: formData.title,
-        model: formData.model,
-        year: parseInt(formData.year),
-        price: parseFloat(formData.price),
-        mileage: parseInt(formData.mileage),
-        fuelType: formData.fuelType,
-        transmission: formData.transmission,
-        description: formData.description,
-        contactNumber: formData.contactNumber,
+        UserId: user?.userId || JSON.parse(localStorage.getItem("user"))?.userId,
+        BrandId: parseInt(formData.brandId),
+        StatusId: parseInt(formData.statusId),
+        ImageId: parseInt(formData.imageId) || 1,
+        Title: formData.title,
+        Model: formData.model,
+        Year: parseInt(formData.year),
+        Price: parseFloat(formData.price),
+        Mileage: parseInt(formData.mileage),
+        FuelType: formData.fuelType,
+        Transmission: formData.transmission,
+        Description: formData.description,
+        ContactNumber: formData.contactNumber,
       };
 
       await api.put(`/Car/${id}`, payload);
@@ -134,168 +129,312 @@ const EditCar = () => {
 
   if (loading)
     return (
-      <div className="flex justify-center items-center min-h-[60vh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      <div className="flex justify-center items-center min-h-[50vh]">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
       </div>
     );
 
+  const selectedBrandName = brands.find(b => b.id == formData.brandId)?.name || "Luxury Brand";
+  const previewCar = {
+    brandName: selectedBrandName,
+    model: formData.model || "Model Name",
+    title: formData.title || "Vehicle Listing Title",
+    price: formData.price ? parseFloat(formData.price) : 0,
+    year: formData.year,
+    fuelType: formData.fuelType,
+    transmission: formData.transmission,
+    imageUrl: formData.imageUrl,
+    statusName: statuses.find(s => s.id == formData.statusId)?.name || "Available",
+  };
+
   return (
-    <div className="max-w-3xl mx-auto py-8">
+    <div className="py-2">
+      {/* Back link */}
       <Button
         variant="ghost"
         onClick={() => navigate("/my-listings")}
-        className="mb-6 gap-2"
+        className="mb-4 gap-2 pl-0 hover:bg-transparent hover:text-primary font-bold text-xs"
       >
         <ArrowLeft className="h-4 w-4" /> Back to My Listings
       </Button>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">Edit Car Listing</CardTitle>
-        </CardHeader>
-        <CardContent>
+      {/* Header */}
+      <div className="mb-6">
+        <h1 className="text-3xl font-black tracking-tight bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">Edit Car Listing</h1>
+        <p className="text-muted-foreground text-sm">Refine your premium vehicle specifications and status.</p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Left column: Form */}
+        <div className="lg:col-span-7 space-y-6">
           {error && (
-            <Alert variant="destructive" className="mb-6">
+            <Alert variant="destructive" className="rounded-xl animate-in fade-in zoom-in-95 duration-200">
               <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Error</AlertTitle>
-              <AlertDescription>{error}</AlertDescription>
+              <AlertTitle className="text-sm font-semibold">Error</AlertTitle>
+              <AlertDescription className="text-xs">{error}</AlertDescription>
             </Alert>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="title">Title</Label>
-                <Input
-                  id="title"
-                  value={formData.title}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="brandId">Brand</Label>
-                <Select
-                  id="brandId"
-                  value={formData.brandId}
-                  onChange={handleChange}
-                  required
-                >
-                  {brands.map((brand) => (
-                    <option key={brand.id} value={brand.id}>
-                      {brand.name}
-                    </option>
-                  ))}
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="model">Model</Label>
-                <Input
-                  id="model"
-                  value={formData.model}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="year">Year</Label>
-                <Input
-                  id="year"
-                  type="number"
-                  value={formData.year}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-            </div>
+            {/* Part 1: Vehicle Information */}
+            <Card className="shadow-md bg-card/45 border-border/40 premium-glow-primary">
+              <CardHeader className="pb-3 border-b border-border/40">
+                <CardTitle className="text-base font-bold flex items-center gap-2 text-foreground/90">
+                  <Sparkles className="h-4.5 w-4.5 text-primary" />
+                  Vehicle Identification
+                </CardTitle>
+                <CardDescription className="text-xs">Provide core specifications of the car.</CardDescription>
+              </CardHeader>
+              <CardContent className="p-5 md:p-6 space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="title" className="text-xs font-semibold text-foreground/80">Listing Title</Label>
+                  <Input
+                    id="title"
+                    placeholder="e.g. Pristine Condition BMW M4 - Low Mileage"
+                    onChange={handleChange}
+                    value={formData.title}
+                    required
+                  />
+                </div>
 
-            <div className="grid grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="price">Price ($)</Label>
-                <Input
-                  id="price"
-                  type="number"
-                  value={formData.price}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="mileage">Mileage (km)</Label>
-                <Input
-                  id="mileage"
-                  type="number"
-                  value={formData.mileage}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-            </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="brandId" className="text-xs font-semibold text-foreground/80">Brand</Label>
+                    <Select
+                      id="brandId"
+                      onChange={handleChange}
+                      value={formData.brandId}
+                    >
+                      {brands.map((b) => (
+                        <option key={b.id} value={b.id}>
+                          {b.name}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="model" className="text-xs font-semibold text-foreground/80">Model</Label>
+                    <Input
+                      id="model"
+                      placeholder="e.g. M4 Competition"
+                      onChange={handleChange}
+                      value={formData.model}
+                      required
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-            <div className="grid grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="fuelType">Fuel Type</Label>
-                <Select
-                  id="fuelType"
-                  value={formData.fuelType}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="Petrol">Petrol</option>
-                  <option value="Diesel">Diesel</option>
-                  <option value="Electric">Electric</option>
-                  <option value="Hybrid">Hybrid</option>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="transmission">Transmission</Label>
-                <Select
-                  id="transmission"
-                  value={formData.transmission}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="Automatic">Automatic</option>
-                  <option value="Manual">Manual</option>
-                </Select>
-              </div>
-            </div>
+            {/* Part 2: Technical Specifications */}
+            <Card className="shadow-md bg-card/45 border-border/40">
+              <CardHeader className="pb-3 border-b border-border/40">
+                <CardTitle className="text-base font-bold flex items-center gap-2 text-foreground/90">
+                  <Info className="h-4.5 w-4.5 text-primary" />
+                  Specifications, Status & Price
+                </CardTitle>
+                <CardDescription className="text-xs">Detail the running mechanics and pricing parameters.</CardDescription>
+              </CardHeader>
+              <CardContent className="p-5 md:p-6 space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="year" className="text-xs font-semibold text-foreground/80">Year</Label>
+                    <Input
+                      id="year"
+                      type="number"
+                      min="1900"
+                      max="2027"
+                      value={formData.year}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="price" className="text-xs font-semibold text-foreground/80">Price ($)</Label>
+                    <Input
+                      id="price"
+                      type="number"
+                      placeholder="0.00"
+                      value={formData.price}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="contactNumber">Contact Number</Label>
-              <Input
-                id="contactNumber"
-                type="tel"
-                value={formData.contactNumber}
-                onChange={handleChange}
-                required
-              />
-              <p className="text-xs text-muted-foreground">
-                This number will be displayed to potential buyers so they can contact you.
-              </p>
-            </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="mileage" className="text-xs font-semibold text-foreground/80">Mileage (km)</Label>
+                    <Input
+                      id="mileage"
+                      type="number"
+                      placeholder="0"
+                      value={formData.mileage}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="statusId" className="text-xs font-semibold text-foreground/80">Status</Label>
+                    <Select
+                      id="statusId"
+                      value={formData.statusId}
+                      onChange={handleChange}
+                      required
+                    >
+                      {statuses.map((status) => (
+                        <option key={status.id} value={status.id}>
+                          {status.name}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
+                </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
-                value={formData.description}
-                onChange={handleChange}
-                rows="4"
-              />
-            </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="fuelType" className="text-xs font-semibold text-foreground/80">Fuel</Label>
+                    <Select
+                      id="fuelType"
+                      onChange={handleChange}
+                      value={formData.fuelType}
+                    >
+                      <option>Petrol</option>
+                      <option>Diesel</option>
+                      <option>Electric</option>
+                      <option>Hybrid</option>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="transmission" className="text-xs font-semibold text-foreground/80">Transmission</Label>
+                    <Select
+                      id="transmission"
+                      onChange={handleChange}
+                      value={formData.transmission}
+                    >
+                      <option>Automatic</option>
+                      <option>Manual</option>
+                    </Select>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Part 3: Contact & Description */}
+            <Card className="shadow-md bg-card/45 border-border/40">
+              <CardHeader className="pb-3 border-b border-border/40">
+                <CardTitle className="text-base font-bold flex items-center gap-2 text-foreground/90">
+                  <LinkIcon className="h-4.5 w-4.5 text-primary" />
+                  Seller Details & Description
+                </CardTitle>
+                <CardDescription className="text-xs">How can potential buyers contact you?</CardDescription>
+              </CardHeader>
+              <CardContent className="p-5 md:p-6 space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="contactNumber" className="text-xs font-semibold text-foreground/80">Contact Number</Label>
+                  <Input
+                    id="contactNumber"
+                    type="tel"
+                    placeholder="e.g. +1 234 567 8900"
+                    value={formData.contactNumber}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="description" className="text-xs font-semibold text-foreground/80">Description</Label>
+                  <Textarea
+                    id="description"
+                    rows="3"
+                    placeholder="Tell us about the car's condition, modifications, and history..."
+                    value={formData.description}
+                    onChange={handleChange}
+                  />
+                </div>
+              </CardContent>
+            </Card>
 
             <Button
               type="submit"
               size="lg"
-              className="w-full"
+              className="w-full font-bold shadow-lg"
               disabled={saving}
             >
-              {saving ? "Saving Changes..." : "Save Changes"}
+              {saving ? "Saving Changes..." : "Save listing updates"}
             </Button>
           </form>
-        </CardContent>
-      </Card>
+        </div>
+
+        {/* Right column: Sticky live preview card */}
+        <div className="lg:col-span-5 lg:sticky lg:top-24 space-y-6">
+          <div className="border border-border/40 bg-card/65 dark:bg-slate-900/40 rounded-2xl p-5 shadow-xl backdrop-blur-md">
+            <div className="flex items-center justify-between mb-4 border-b border-border/40 pb-3">
+              <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-1.5">
+                <Eye className="h-4 w-4 text-primary" />
+                Live Listing Card Preview
+              </h3>
+              <span className="text-[9px] bg-primary/10 text-primary border border-primary/20 rounded-full px-2 py-0.5 font-bold uppercase">Real-time</span>
+            </div>
+
+            <motion.div
+              layout
+              className="overflow-hidden rounded-2xl border border-border/30 bg-card shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              <div className="relative aspect-[16/10] overflow-hidden bg-muted/40">
+                <img
+                  src={previewCar.imageUrl || "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80&w=1000"}
+                  alt="Preview"
+                  className="h-full w-full object-cover transition-all duration-500"
+                  onError={(e) => {
+                    e.target.src = "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80&w=1000";
+                  }}
+                />
+                <div className="absolute top-3 right-3">
+                  <span className="backdrop-blur-md bg-white/95 dark:bg-slate-900/80 font-bold text-xs px-2.5 py-1 rounded-full text-foreground border border-border/30">
+                    {previewCar.statusName}
+                  </span>
+                </div>
+              </div>
+              
+              <div className="p-4 pb-2">
+                <p className="text-[10px] font-bold text-primary uppercase tracking-wider mb-0.5">
+                  {previewCar.brandName}
+                </p>
+                <h3 className="font-bold text-lg leading-tight truncate">
+                  {previewCar.model}
+                </h3>
+                <p className="text-xs text-muted-foreground truncate mt-1">{previewCar.title}</p>
+              </div>
+              
+              <div className="p-4 pt-0">
+                <div className="text-2xl font-black text-foreground mb-4">
+                  ${previewCar.price?.toLocaleString() || "0"}
+                </div>
+                
+                <div className="grid grid-cols-3 gap-2 text-[10px] text-muted-foreground">
+                  <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-muted/50">
+                    <span className="font-bold text-foreground">{previewCar.year}</span>
+                    <span className="text-[8px] opacity-75 uppercase mt-0.5">Year</span>
+                  </div>
+                  <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-muted/50">
+                    <span className="font-bold text-foreground truncate max-w-full">{previewCar.fuelType}</span>
+                    <span className="text-[8px] opacity-75 uppercase mt-0.5">Fuel</span>
+                  </div>
+                  <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-muted/50">
+                    <span className="font-bold text-foreground truncate max-w-full">{previewCar.transmission === "Automatic" ? "Auto" : "Manual"}</span>
+                    <span className="text-[8px] opacity-75 uppercase mt-0.5">Gear</span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            <p className="text-[10px] text-muted-foreground/80 mt-4 leading-relaxed italic text-center">
+              * This is exactly how your listing will render to prospective buyers in the AutoPremium marketplace.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

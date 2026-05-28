@@ -19,6 +19,7 @@ import {
   CardDescription,
 } from "../components/ui/card";
 import { Input } from "../components/ui/input";
+import { Select } from "../components/ui/select";
 import { Skeleton } from "../components/ui/skeleton";
 
 const AdminUsers = () => {
@@ -295,25 +296,25 @@ const AdminUsers = () => {
       {/* Custom Modal for Create/Edit using Tailwind */}
       {
         isModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-            <div className="bg-background rounded-lg shadow-lg w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
-              <div className="flex items-center justify-between p-4 border-b">
-                <h2 className="text-lg font-semibold">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-300">
+            <div className="bg-card/95 border border-border/45 backdrop-blur-xl rounded-2xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col max-h-[90vh] premium-glow-primary animate-in zoom-in-95 duration-200">
+              <div className="flex items-center justify-between p-5 border-b border-border/40">
+                <h2 className="text-base font-bold text-foreground/90">
                   {modalMode === "create" ? "Add New User" : "Edit User"}
                 </h2>
-                <Button variant="ghost" size="icon" onClick={closeModal} className="h-8 w-8 rounded-full">
+                <Button variant="ghost" size="icon" onClick={closeModal} className="h-8 w-8 rounded-full hover:bg-muted/80">
                   <X className="h-4 w-4" />
                 </Button>
               </div>
-              <div className="p-4 overflow-y-auto">
+              <div className="p-5 overflow-y-auto space-y-4">
                 <form id="user-form" onSubmit={handleSubmit} className="space-y-4">
                   {formError && (
-                    <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
+                    <div className="p-3 text-xs font-semibold text-red-600 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/35 rounded-xl">
                       {formError}
                     </div>
                   )}
-                  <div className="space-y-1">
-                    <label className="text-sm font-medium">Username</label>
+                  <div className="space-y-1.5">
+                    <Label className="text-xs font-semibold text-foreground/80">Username</Label>
                     <Input
                       name="userName"
                       value={formData.userName}
@@ -322,8 +323,8 @@ const AdminUsers = () => {
                       placeholder="johndoe"
                     />
                   </div>
-                  <div className="space-y-1">
-                    <label className="text-sm font-medium">Email</label>
+                  <div className="space-y-1.5">
+                    <Label className="text-xs font-semibold text-foreground/80">Email</Label>
                     <Input
                       name="email"
                       type="email"
@@ -334,8 +335,8 @@ const AdminUsers = () => {
                     />
                   </div>
                   {modalMode === "create" && (
-                    <div className="space-y-1">
-                      <label className="text-sm font-medium">Password</label>
+                    <div className="space-y-1.5">
+                      <Label className="text-xs font-semibold text-foreground/80">Password</Label>
                       <Input
                         name="password"
                         type="text"
@@ -346,8 +347,8 @@ const AdminUsers = () => {
                       />
                     </div>
                   )}
-                  <div className="space-y-1">
-                    <label className="text-sm font-medium">Phone</label>
+                  <div className="space-y-1.5">
+                    <Label className="text-xs font-semibold text-foreground/80">Phone</Label>
                     <Input
                       name="phone"
                       value={formData.phone}
@@ -355,26 +356,25 @@ const AdminUsers = () => {
                       placeholder="+1 234 567 8900"
                     />
                   </div>
-                  <div className="space-y-1">
-                    <label className="text-sm font-medium">Role</label>
-                    <select
+                  <div className="space-y-1.5">
+                    <Label className="text-xs font-semibold text-foreground/80">Role</Label>
+                    <Select
                       name="role"
                       value={formData.role}
                       onChange={handleInputChange}
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       <option value="Buyer">Buyer</option>
                       <option value="Seller">Seller</option>
                       <option value="Admin">Admin</option>
-                    </select>
+                    </Select>
                   </div>
                 </form>
               </div>
-              <div className="p-4 border-t bg-muted/20 flex justify-end gap-2">
-                <Button type="button" variant="outline" onClick={closeModal} disabled={formLoading}>
+              <div className="p-5 border-t border-border/40 bg-muted/15 flex justify-end gap-2">
+                <Button type="button" variant="outline" onClick={closeModal} disabled={formLoading} className="font-bold">
                   Cancel
                 </Button>
-                <Button type="submit" form="user-form" disabled={formLoading}>
+                <Button type="submit" form="user-form" disabled={formLoading} className="font-bold">
                   {formLoading ? "Saving..." : "Save User"}
                 </Button>
               </div>

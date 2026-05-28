@@ -1,4 +1,4 @@
-﻿using SecondHandCarSellingAPI.Data;
+using SecondHandCarSellingAPI.Data;
 using SecondHandCarSellingAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -91,7 +91,7 @@ namespace SecondHandCarSellingAPI.Controllers
 
         #region Delete Car Brand
 
-        [HttpDelete("id")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCarBrand(int id)
         {
             var carBrand = await _context.CarBrand.FindAsync(id);

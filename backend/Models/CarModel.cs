@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 
@@ -90,7 +90,9 @@ namespace SecondHandCarSellingAPI.Models
         public string FuelType { get; set; }
         public string Transmission { get; set; }
         public string? Description { get; set; }
+        public int BrandId { get; set; }
         public string BrandName { get; set; }
+        public int StatusId { get; set; }
         public string StatusName { get; set; }
         public string UserName { get; set; }
         public string? ImageUrl { get; set; }

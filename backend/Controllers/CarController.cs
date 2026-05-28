@@ -42,7 +42,9 @@ namespace SecondHandCarSellingAPI.Controllers
                     Transmission = c.Transmission,
                     Description = c.Description,
                     CreatedDate = c.CreatedDate,
+                    BrandId = c.BrandId,
                     BrandName = c.Brand.BrandName,
+                    StatusId = c.StatusId,
                     StatusName = c.Status.StatusName,
                     UserName = c.User.UserName,
                     ImageUrl = _context.CarImages.Where(i => i.CarId == c.CarId).Select(i => i.ImageUrl).FirstOrDefault(),
@@ -78,7 +80,9 @@ namespace SecondHandCarSellingAPI.Controllers
                     Transmission = c.Transmission,
                     Description = c.Description,
                     CreatedDate = c.CreatedDate,
+                    BrandId = c.BrandId,
                     BrandName = c.Brand.BrandName,
+                    StatusId = c.StatusId,
                     StatusName = c.Status.StatusName,
                     UserName = c.User.UserName,
                     ImageUrl = _context.CarImages.Where(i => i.CarId == c.CarId).Select(i => i.ImageUrl).FirstOrDefault(),
@@ -146,7 +150,9 @@ namespace SecondHandCarSellingAPI.Controllers
                     Transmission = c.Transmission,
                     Description = c.Description,
                     CreatedDate = c.CreatedDate,
+                    BrandId = c.BrandId,
                     BrandName = c.Brand.BrandName,
+                    StatusId = c.StatusId,
                     StatusName = c.Status.StatusName,
                     UserName = c.User.UserName,
                     ImageUrl = _context.CarImages.Where(i => i.CarId == c.CarId).Select(i => i.ImageUrl).FirstOrDefault(),
@@ -182,7 +188,9 @@ namespace SecondHandCarSellingAPI.Controllers
                     Transmission = c.Transmission,
                     Description = c.Description,
                     CreatedDate = c.CreatedDate,
+                    BrandId = c.BrandId,
                     BrandName = c.Brand.BrandName,
+                    StatusId = c.StatusId,
                     StatusName = c.Status.StatusName,
                     UserName = c.User.UserName,
                     ImageUrl = _context.CarImages.Where(i => i.CarId == c.CarId).Select(i => i.ImageUrl).FirstOrDefault(),
@@ -208,6 +216,7 @@ namespace SecondHandCarSellingAPI.Controllers
                 UserId = dto.UserId,
                 BrandId = dto.BrandId,
                 StatusId = dto.StatusId,
+                ImageId = dto.ImageId,
                 Title = dto.Title,
                 Model = dto.Model,
                 Year = dto.Year,
@@ -231,27 +240,25 @@ namespace SecondHandCarSellingAPI.Controllers
         #region Update Car
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCar(int id, CarModel car)
+        public async Task<IActionResult> UpdateCar(int id, CarCreateUpdateDTO dto)
         {
-            if (id != car.CarId)
-                return BadRequest(new { message = "Car ID mismatch" });
-
             var existingCar = await _context.Car.FindAsync(id);
             if (existingCar == null)
                 return NotFound(new { message = "Car not found" });
 
-            existingCar.UserId = car.UserId;
-            existingCar.BrandId = car.BrandId;
-            existingCar.StatusId = car.StatusId;
-            existingCar.Title = car.Title;
-            existingCar.Model = car.Model;
-            existingCar.Year = car.Year;
-            existingCar.Price = car.Price;
-            existingCar.Mileage = car.Mileage;
-            existingCar.FuelType = car.FuelType;
-            existingCar.Transmission = car.Transmission;
-            existingCar.Description = car.Description;
-            existingCar.ContactNumber = car.ContactNumber;
+            existingCar.UserId = dto.UserId;
+            existingCar.BrandId = dto.BrandId;
+            existingCar.StatusId = dto.StatusId;
+            existingCar.ImageId = dto.ImageId;
+            existingCar.Title = dto.Title;
+            existingCar.Model = dto.Model;
+            existingCar.Year = dto.Year;
+            existingCar.Price = dto.Price;
+            existingCar.Mileage = dto.Mileage;
+            existingCar.FuelType = dto.FuelType;
+            existingCar.Transmission = dto.Transmission;
+            existingCar.Description = dto.Description;
+            existingCar.ContactNumber = dto.ContactNumber;
             existingCar.ModifiedDate = DateTime.Now;
 
             await _context.SaveChangesAsync();

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import api from "../services/api";
-import { Plus, Edit, Trash2, Tag, Flag, AlertCircle } from "lucide-react";
+import { Plus, Edit, Trash2, Tag, Flag, AlertCircle, X } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
@@ -127,18 +127,10 @@ const AdminSettings = () => {
             return;
         }
 
-        const isBrand = activeTab === "brands";
-        const endpoint = isBrand ? "/CarBrands/id" : "/CarStatus";
-        // Note: The CarBrands controller delete endpoint has a bug: [HttpDelete("id")] instead of [HttpDelete("{id}")].
-        // If it's literally "/CarBrands/id" we would call `api.delete('/CarBrands/id?id=' + id)`, but usually it's `api.delete('/CarBrands/' + id)`
-        // Actually the route is [HttpDelete("id")], method parameter is (int id) which maps via query string. Let's try query.
+        const endpoint = isBrand ? "/CarBrands" : "/CarStatus";
 
         try {
-            if (isBrand) {
-                await api.delete(`/CarBrands/id?id=${id}`);
-            } else {
-                await api.delete(`${endpoint}/${id}`);
-            }
+            await api.delete(`${endpoint}/${id}`);
             await fetchData();
         } catch (err) {
             console.error("Delete error", err);
@@ -280,22 +272,25 @@ const AdminSettings = () => {
 
             {/* Reusable Modal for Forms */}
             {isModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-                    <div className="bg-background rounded-lg shadow-lg w-full max-w-sm overflow-hidden flex flex-col">
-                        <div className="flex items-center justify-between p-4 border-b">
-                            <h2 className="text-lg font-semibold">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-300">
+                    <div className="bg-card/95 border border-border/45 backdrop-blur-xl rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden flex flex-col premium-glow-primary animate-in zoom-in-95 duration-200">
+                        <div className="flex items-center justify-between p-5 border-b border-border/40">
+                            <h2 className="text-base font-bold text-foreground/90">
                                 {modalMode === "create" ? `Add New ${entityLabel}` : `Edit ${entityLabel}`}
                             </h2>
+                            <Button variant="ghost" size="icon" onClick={closeModal} className="h-8 w-8 rounded-full hover:bg-muted/80">
+                                <X className="h-4 w-4" />
+                            </Button>
                         </div>
-                        <div className="p-4">
+                        <div className="p-5 space-y-4">
                             <form id="settings-form" onSubmit={handleSubmit} className="space-y-4">
                                 {formError && (
-                                    <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
+                                    <div className="p-3 text-xs font-semibold text-red-600 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/35 rounded-xl">
                                         {formError}
                                     </div>
                                 )}
-                                <div className="space-y-1">
-                                    <Label htmlFor="name">{entityLabel} Name</Label>
+                                <div className="space-y-1.5">
+                                    <Label htmlFor="name" className="text-xs font-semibold text-foreground/80">{entityLabel} Name</Label>
                                     <Input
                                         id="name"
                                         value={formData.name}
@@ -307,11 +302,11 @@ const AdminSettings = () => {
                                 </div>
                             </form>
                         </div>
-                        <div className="p-4 border-t bg-muted/20 flex justify-end gap-2">
-                            <Button type="button" variant="outline" onClick={closeModal} disabled={formLoading}>
+                        <div className="p-5 border-t border-border/40 bg-muted/15 flex justify-end gap-2">
+                            <Button type="button" variant="outline" onClick={closeModal} disabled={formLoading} className="font-bold">
                                 Cancel
                             </Button>
-                            <Button type="submit" form="settings-form" disabled={formLoading}>
+                            <Button type="submit" form="settings-form" disabled={formLoading} className="font-bold">
                                 {formLoading ? "Saving..." : "Save"}
                             </Button>
                         </div>

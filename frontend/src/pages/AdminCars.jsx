@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../services/api";
-import { Trash2, User, MoreVertical, Eye } from "lucide-react";
+import { Trash2, User, MoreVertical, Eye, Edit } from "lucide-react";
 import { Button } from "../components/ui/button";
 import {
   Table,
@@ -146,6 +146,11 @@ const AdminCars = () => {
                             <Link to={`/cars/${car.carId}`}>
                               <Button variant="ghost" size="icon">
                                 <Eye className="h-4 w-4" />
+                              </Button>
+                            </Link>
+                            <Link to={`/edit-car/${car.carId}`}>
+                              <Button variant="ghost" size="icon">
+                                <Edit className="h-4 w-4" />
                               </Button>
                             </Link>
                             <Button
