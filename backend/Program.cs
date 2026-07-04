@@ -4,40 +4,31 @@ using SecondHandCarSellingAPI.Services;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using SecondHandCarSelling.Services;
-using SecondHandCarSellingAPI.Data;    
+using SecondHandCarSellingAPI.Data;     
 using SecondHandCarSellingAPI.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// 1. COMBINED CORS POLICY (Supports both Local Dev and Vercel Production)
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReactApp",
-        builder =>
+    options.AddPolicy("AllowFrontend",
+        policy =>
         {
-            builder.WithOrigins("http://localhost:5173", "http://localhost:5174")
+            policy.WithOrigins(
+                    "http://localhost:5173", 
+                    "http://localhost:5174",
+                    "https://second-hand-car-selling.vercel.app/"
+                   )
                    .AllowAnyHeader()
                    .AllowAnyMethod();
         });
 });
+
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowReact",
-        policy =>
-        {
-            // Replace this string with your real Vercel URL later!
-            policy.WithOrigins("https://your-vercel-app.vercel.app")
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
-        });
-});
-
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-// builder.Services.AddOpenApi();
 
 // Register DbContext
 builder.Services.AddDbContext<CarSellingDbContext>(options =>
@@ -46,10 +37,10 @@ builder.Services.AddDbContext<CarSellingDbContext>(options =>
 // File service registration
 builder.Services.AddScoped<IFileService, FileService>();
 
-// Limit file upload size (e.g., 15MB) to prevent abuse
+// Limit file upload size (15MB)
 builder.Services.Configure<FormOptions>(options =>
 {
-    options.MultipartBodyLengthLimit = 15 * 1024 * 1024; // 15 MB
+    options.MultipartBodyLengthLimit = 15 * 1024 * 1024; 
 });
 
 // Register TokenService
@@ -106,33 +97,18 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-
 #region Validators
-
-builder.Services.AddControllers();
-
 builder.Services.AddValidatorsFromAssemblyContaining<UserUpdateDTOValidator>();
-
 builder.Services.AddValidatorsFromAssemblyContaining<UserONLYCreateDTOValidator>();
-
 builder.Services.AddValidatorsFromAssemblyContaining<UpdateReviewDTOValidator>();
-
 builder.Services.AddValidatorsFromAssemblyContaining<CreateReviewDTOValidator>();
-
 builder.Services.AddValidatorsFromAssemblyContaining<PurchaseUpdateDTOValidator>();
-
 builder.Services.AddValidatorsFromAssemblyContaining<PurchaseCreateDTOValidator>();
-
 builder.Services.AddValidatorsFromAssemblyContaining<CarStatusCreateUpdateDTOValidator>();
-
 builder.Services.AddValidatorsFromAssemblyContaining<CarCreateUpdateDTOValidator>();
-
 builder.Services.AddValidatorsFromAssemblyContaining<UpdateCarImageDTOValidator>();
-
 builder.Services.AddValidatorsFromAssemblyContaining<CreateCarImageDTOValidator>();
-
 builder.Services.AddValidatorsFromAssemblyContaining<CarBrandCreateUpdateDTOValidator>();
-
 #endregion
 
 var app = builder.Build();
@@ -140,14 +116,16 @@ var app = builder.Build();
 // Enable static files for serving uploads
 app.UseStaticFiles();
 
-// Configure the HTTP request pipeline.
-app.UseCors("AllowReactApp");
+// 2. ACTIVATE THE PIPELINE CORRECTLY
+app.UseCors("AllowFrontend");
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// Keep Swagger visible in production for testing on Render if you like, 
+// or keep it wrapped in IsDevelopment() as you had it.
+app.UseSwagger();
+app.UseSwaggerUI(c => {
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "SecondHandCarSelling API v1");
+    c.RoutePrefix = string.Empty; // Makes Swagger load at the root URL of your Render service
+});
 
 app.UseAuthentication();
 app.UseAuthorization();
