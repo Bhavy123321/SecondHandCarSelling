@@ -6,8 +6,8 @@ using SecondHandCarSellingAPI.Services;
 
 namespace SecondHandCarSellingAPI.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
         private readonly CarSellingDbContext _context;
