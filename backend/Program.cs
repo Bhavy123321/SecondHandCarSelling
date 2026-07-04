@@ -141,20 +141,25 @@ app.UseAuthorization();
 app.MapControllers();
 
 // Automatically apply database migrations on startup
+// Force apply raw migrations directly to your Render PostgreSQL instance on startup
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     try
     {
         var context = services.GetRequiredService<CarSellingDbContext>();
-        context.Database.Migrate(); // This creates the database/tables if they don't exist
+        
+        // This inspects your Migrations folder and forces them into the remote database
+        context.Database.Migrate(); 
     }
     catch (Exception ex)
     {
         var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occurred while migrating the database.");
+        logger.LogError(ex, "Database migration failed during startup application lifecycle execution.");
     }
 }
+
+app.Run();
 
 
 app.Run();
