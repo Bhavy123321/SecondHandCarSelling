@@ -35,14 +35,14 @@ const AppSidebar = ({ isOpen, onClose }) => {
       <Link to={to} onClick={onClose} className="w-full">
         <div
           className={cn(
-            "flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-all duration-200",
+            "flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] font-medium transition-all duration-200",
             isActive
               ? "bg-primary/10 text-primary hover:bg-primary/15"
               : "text-muted-foreground hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-foreground",
           )}
         >
           <Icon
-            size={18}
+            size={16}
             className={isActive ? "text-primary" : "text-muted-foreground"}
           />
           {label}
@@ -52,13 +52,13 @@ const AppSidebar = ({ isOpen, onClose }) => {
   };
 
   const SidebarContent = () => (
-    <div className="flex flex-col h-full bg-card border-r w-64">
+    <div className="flex flex-col h-full bg-card border-r w-56">
       {/* Header */}
-      <div className="p-6 flex items-center gap-3 border-b h-16">
-        <div className="size-8 bg-primary rounded-lg flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/25">
-          <Car size={18} />
+      <div className="p-5 flex items-center gap-2.5 border-b h-14">
+        <div className="size-7 bg-primary rounded-md flex items-center justify-center text-primary-foreground shadow-sm shadow-primary/25">
+          <Car size={16} />
         </div>
-        <span className="font-bold text-lg tracking-tight">AutoPremium</span>
+        <span className="font-bold text-base tracking-tight">AutoPremium</span>
         <button className="md:hidden ml-auto" onClick={onClose}>
           <X size={20} className="text-muted-foreground" />
         </button>
@@ -179,7 +179,7 @@ const AppSidebar = ({ isOpen, onClose }) => {
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="fixed inset-y-0 left-0 w-64 bg-background z-50 md:hidden shadow-2xl"
+              className="fixed inset-y-0 left-0 w-56 bg-background z-50 md:hidden shadow-2xl"
             >
               <SidebarContent />
             </motion.div>

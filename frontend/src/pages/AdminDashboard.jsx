@@ -62,8 +62,8 @@ const AdminDashboard = () => {
             </div>
           </CardHeader>
           <CardContent className="pt-2">
-            <div className="text-3xl font-black tracking-tight text-foreground/90">
-              {loading ? <Skeleton className="h-9 w-24 rounded-lg" /> : value}
+            <div className="text-2xl font-bold tracking-tight text-foreground/90">
+              {loading ? <Skeleton className="h-8 w-20 rounded-lg" /> : value}
             </div>
             <p className="text-[11px] text-muted-foreground mt-1 flex items-center gap-1">
               <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary/60 animate-pulse" />
@@ -79,8 +79,8 @@ const AdminDashboard = () => {
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-500">
       <div className="flex items-center justify-between space-y-2">
         <div>
-          <h2 className="text-3xl font-black tracking-tight bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">System Console</h2>
-          <p className="text-muted-foreground text-sm">
+          <h2 className="text-xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">System Console</h2>
+          <p className="text-muted-foreground text-xs">
             Overview of system performance, metrics, and core parameters.
           </p>
         </div>
@@ -137,19 +137,19 @@ const AdminDashboard = () => {
               <Link to="/admin/users" className="block w-full">
                 <Button
                   variant="outline"
-                  className="w-full h-28 flex flex-col items-center justify-center gap-2.5 hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 rounded-2xl group border-border/50"
+                  className="w-full h-24 flex flex-col items-center justify-center gap-2 hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 rounded-xl group border-border/50"
                 >
-                  <Users className="h-7 w-7 text-muted-foreground group-hover:text-primary transition-colors duration-300" />
-                  <span className="font-bold text-xs uppercase tracking-wider text-foreground/80 group-hover:text-foreground">Manage Users</span>
+                  <Users className="h-6 w-6 text-muted-foreground group-hover:text-primary transition-colors duration-300" />
+                  <span className="font-bold text-[10px] uppercase tracking-wider text-foreground/80 group-hover:text-foreground">Manage Users</span>
                 </Button>
               </Link>
               <Link to="/admin/cars" className="block w-full">
                 <Button
                   variant="outline"
-                  className="w-full h-28 flex flex-col items-center justify-center gap-2.5 hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 rounded-2xl group border-border/50"
+                  className="w-full h-24 flex flex-col items-center justify-center gap-2 hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 rounded-xl group border-border/50"
                 >
-                  <Car className="h-7 w-7 text-muted-foreground group-hover:text-primary transition-colors duration-300" />
-                  <span className="font-bold text-xs uppercase tracking-wider text-foreground/80 group-hover:text-foreground">Manage Cars</span>
+                  <Car className="h-6 w-6 text-muted-foreground group-hover:text-primary transition-colors duration-300" />
+                  <span className="font-bold text-[10px] uppercase tracking-wider text-foreground/80 group-hover:text-foreground">Manage Cars</span>
                 </Button>
               </Link>
             </div>

@@ -37,7 +37,7 @@ const Layout = ({ children }) => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-muted/10 dark:bg-slate-950/20 relative flex font-sans antialiased text-foreground overflow-hidden">
+    <div className="h-screen bg-muted/10 dark:bg-slate-950/20 relative flex font-sans antialiased text-foreground overflow-hidden">
       {/* Premium Ambient Glowing Background Orbs */}
       <div className="absolute top-[-20%] left-[-20%] w-[50%] h-[50%] rounded-full bg-primary/5 dark:bg-primary/8 blur-[150px] pointer-events-none z-0" />
       <div className="absolute bottom-[-20%] right-[-20%] w-[50%] h-[50%] rounded-full bg-baltic-blue-500/5 dark:bg-baltic-blue-500/8 blur-[150px] pointer-events-none z-0" />

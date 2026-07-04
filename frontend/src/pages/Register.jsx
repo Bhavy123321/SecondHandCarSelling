@@ -88,7 +88,7 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen relative flex items-center justify-center bg-muted/5 dark:bg-slate-950/10 p-4 py-8 overflow-hidden">
+    <div className="min-h-[100dvh] relative flex items-center justify-center bg-muted/5 dark:bg-slate-950/10 p-4 py-8 overflow-y-auto scrollbar-hidden">
       {/* Visual background decorative ambient orbs */}
       <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full bg-primary/8 dark:bg-primary/10 blur-[100px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-80 h-80 rounded-full bg-baltic-blue-500/8 dark:bg-baltic-blue-500/10 blur-[100px] pointer-events-none" />
@@ -97,11 +97,11 @@ const Register = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="w-full max-w-md z-10"
+        className="w-full max-w-[26rem] z-10"
       >
         <Card className="border-t-4 border-t-primary shadow-2xl backdrop-blur-xl bg-card/60 dark:bg-slate-900/40 premium-glow-primary">
-          <CardHeader className="space-y-1.5 text-center pb-4">
-            <div className="flex justify-center mb-4">
+          <CardHeader className="space-y-1 text-center pb-3 pt-5">
+            <div className="flex justify-center mb-2">
               <motion.div 
                 whileHover={{ scale: 1.05, rotate: 5 }}
                 whileTap={{ scale: 0.95 }}
@@ -118,8 +118,8 @@ const Register = () => {
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="space-y-4">
-            <form onSubmit={handleSubmit} className="space-y-4">
+          <CardContent className="space-y-3 pb-4">
+            <form onSubmit={handleSubmit} className="space-y-3">
               {error && (
                 <Alert variant="destructive" className="py-2.5 rounded-xl animate-in fade-in zoom-in-95 duration-200">
                   <AlertCircle className="h-4 w-4" />
@@ -128,8 +128,8 @@ const Register = () => {
                 </Alert>
               )}
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
                   <Label htmlFor="userName" className="text-xs font-semibold text-foreground/80">Username</Label>
                   <Input
                     id="userName"
@@ -140,7 +140,7 @@ const Register = () => {
                   />
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   <Label htmlFor="role" className="text-xs font-semibold text-foreground/80">I want to</Label>
                   <Select
                     id="role"
@@ -154,7 +154,7 @@ const Register = () => {
                 </div>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <Label htmlFor="email" className="text-xs font-semibold text-foreground/80">Email</Label>
                 <Input
                   id="email"
@@ -166,7 +166,7 @@ const Register = () => {
                 />
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <Label htmlFor="phone" className="text-xs font-semibold text-foreground/80">Phone Number</Label>
                 <Input
                   id="phone"
@@ -179,7 +179,7 @@ const Register = () => {
                 />
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <Label htmlFor="password" className="text-xs font-semibold text-foreground/80">Password</Label>
                 <Input
                   id="password"
@@ -200,7 +200,7 @@ const Register = () => {
             </form>
           </CardContent>
 
-          <CardFooter className="flex flex-col gap-2 border-t border-border/40 p-5 bg-muted/5 dark:bg-slate-900/10 rounded-b-2xl">
+          <CardFooter className="flex flex-col gap-1.5 border-t border-border/40 py-3 bg-muted/5 dark:bg-slate-900/10 rounded-b-2xl">
             <p className="text-xs text-center text-muted-foreground">
               Already have an account?{" "}
               <Link to="/login" className="text-primary hover:underline font-bold transition-colors">

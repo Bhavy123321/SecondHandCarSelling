@@ -5,9 +5,7 @@
 @layer base {
   :root {
     --background: 210 40% 98%;
-    /* powder-blue-50 */
     --foreground: 222 47% 11%;
-    /* lavender-grey-950 */
 
     --card: 0 0% 100%;
     --card-foreground: 222 47% 11%;
@@ -16,7 +14,6 @@
     --popover-foreground: 222 47% 11%;
 
     --primary: 240 100% 50%;
-    /* lavender-500 */
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -37,8 +34,6 @@
 
     --radius: 0.5rem;
 
-    /* Custom Palette Variables */
-    /* Lavender */
     --color-lavender-50: 240 100% 95%;
     --color-lavender-100: 240 100% 90%;
     --color-lavender-200: 240 100% 80%;
@@ -51,7 +46,6 @@
     --color-lavender-900: 240 100% 10%;
     --color-lavender-950: 240 100% 7%;
 
-    /* Lavender Grey */
     --color-lavender-grey-50: 250 20% 95%;
     --color-lavender-grey-100: 245 20% 90%;
     --color-lavender-grey-200: 242 20% 80%;
@@ -64,7 +58,6 @@
     --color-lavender-grey-900: 242 23% 10%;
     --color-lavender-grey-950: 240 22% 7%;
 
-    /* Powder Blue */
     --color-powder-blue-50: 210 40% 95%;
     --color-powder-blue-100: 210 30% 90%;
     --color-powder-blue-200: 210 30% 80%;
@@ -77,7 +70,6 @@
     --color-powder-blue-900: 210 30% 10%;
     --color-powder-blue-950: 210 30% 7%;
 
-    /* Baltic Blue */
     --color-baltic-blue-50: 205 50% 95%;
     --color-baltic-blue-100: 205 50% 90%;
     --color-baltic-blue-200: 205 50% 80%;
@@ -90,7 +82,6 @@
     --color-baltic-blue-900: 205 50% 10%;
     --color-baltic-blue-950: 205 50% 7%;
 
-    /* Muted Teal */
     --color-muted-teal-50: 100 20% 95%;
     --color-muted-teal-100: 100 20% 90%;
     --color-muted-teal-200: 100 20% 80%;
@@ -106,18 +97,15 @@
 
   .dark {
     --background: 240 22% 7%;
-    /* lavender-grey-950 */
     --foreground: 210 40% 98%;
 
     --card: 242 23% 10%;
-    /* lavender-grey-900 */
     --card-foreground: 210 40% 98%;
 
     --popover: 242 23% 10%;
     --popover-foreground: 210 40% 98%;
 
     --primary: 240 100% 60%;
-    /* lavender-400 */
     --primary-foreground: 222.2 47.4% 11.2%;
 
     --secondary: 217.2 32.6% 17.5%;
@@ -141,10 +129,21 @@
 @layer base {
   * {
     @apply border-border;
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted-foreground) / 0.2) transparent;
+  }
+
+  html {
+    height: 100%;
+    overflow: hidden;
   }
 
   body {
     @apply bg-background text-foreground;
+    height: 100%;
+    overflow: hidden;
+    max-width: 100%;
+    scroll-behavior: smooth;
   }
 }
 
@@ -155,13 +154,14 @@
     -webkit-backdrop-filter: blur(16px) saturate(120%);
     border: 1px solid rgba(255, 255, 255, 0.3);
   }
+
   .dark .glass-card {
     background: rgba(15, 12, 28, 0.55);
     backdrop-filter: blur(20px) saturate(140%);
     -webkit-backdrop-filter: blur(20px) saturate(140%);
     border: 1px solid rgba(255, 255, 255, 0.06);
   }
-  
+
   .premium-glow-primary {
     box-shadow: 0 0 25px -5px hsl(var(--primary) / 0.15), 0 0 15px -5px hsl(var(--primary) / 0.1);
   }
@@ -174,21 +174,50 @@
     background: linear-gradient(135deg, hsl(var(--primary) / 0.9) 0%, hsl(var(--color-baltic-blue-500)) 100%);
   }
 
-  /* Thin premium scrollbar styling */
+  /* Global thin scrollbar for WebKit browsers */
+  *::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.2);
+    border-radius: 9999px;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary) / 0.4);
+  }
+
+  /* Hide scrollbar utility - content still scrolls */
+  .scrollbar-hidden {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Keep .custom-scrollbar class for backward compat */
   .custom-scrollbar::-webkit-scrollbar {
     width: 5px;
     height: 5px;
   }
-  
+
   .custom-scrollbar::-webkit-scrollbar-track {
     background: transparent;
   }
-  
+
   .custom-scrollbar::-webkit-scrollbar-thumb {
     background: hsl(var(--muted-foreground) / 0.25);
     border-radius: 9999px;
   }
-  
+
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: hsl(var(--primary) / 0.5);
   }

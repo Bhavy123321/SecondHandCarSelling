@@ -54,7 +54,7 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="min-h-screen relative flex items-center justify-center bg-muted/5 dark:bg-slate-950/10 p-4 overflow-hidden">
+    <div className="min-h-[100dvh] relative flex items-center justify-center bg-muted/5 dark:bg-slate-950/10 p-4 py-6 overflow-y-auto scrollbar-hidden">
       {/* Visual background decorative ambient orbs */}
       <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full bg-primary/8 dark:bg-primary/10 blur-[100px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-80 h-80 rounded-full bg-baltic-blue-500/8 dark:bg-baltic-blue-500/10 blur-[100px] pointer-events-none" />
@@ -63,11 +63,11 @@ const ForgotPassword = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="w-full max-w-md z-10"
+        className="w-full max-w-[24rem] z-10"
       >
         <Card className="border-t-4 border-t-primary shadow-2xl backdrop-blur-xl bg-card/60 dark:bg-slate-900/40 premium-glow-primary">
-          <CardHeader className="space-y-1.5 text-center pb-4">
-            <div className="flex justify-center mb-4">
+          <CardHeader className="space-y-1 text-center pb-3 pt-5">
+            <div className="flex justify-center mb-2">
               <motion.div 
                 whileHover={{ scale: 1.05, rotate: 5 }}
                 whileTap={{ scale: 0.95 }}
@@ -83,8 +83,8 @@ const ForgotPassword = () => {
               Enter your details to reset your password
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <form onSubmit={handleSubmit} className="space-y-4">
+          <CardContent className="space-y-3 pb-4">
+            <form onSubmit={handleSubmit} className="space-y-3">
               {error && (
                 <Alert variant="destructive" className="py-2.5 rounded-xl animate-in fade-in zoom-in-95 duration-200">
                   <AlertCircle className="h-4 w-4" />
@@ -101,7 +101,7 @@ const ForgotPassword = () => {
                   </AlertDescription>
                 </Alert>
               )}
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <Label htmlFor="username" className="text-xs font-semibold text-foreground/80">Username</Label>
                 <Input
                   id="username"
@@ -113,7 +113,7 @@ const ForgotPassword = () => {
                   disabled={success}
                 />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <Label htmlFor="email" className="text-xs font-semibold text-foreground/80">Email</Label>
                 <Input
                   id="email"
@@ -125,7 +125,7 @@ const ForgotPassword = () => {
                   disabled={success}
                 />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <Label htmlFor="newPassword" className="text-xs font-semibold text-foreground/80">New Password</Label>
                 <Input
                   id="newPassword"
@@ -143,7 +143,7 @@ const ForgotPassword = () => {
               </Button>
             </form>
           </CardContent>
-          <CardFooter className="flex flex-col gap-2 border-t border-border/40 p-5 bg-muted/5 dark:bg-slate-900/10 rounded-b-2xl">
+          <CardFooter className="flex flex-col gap-1.5 border-t border-border/40 py-3 bg-muted/5 dark:bg-slate-900/10 rounded-b-2xl">
             <p className="text-xs text-center text-muted-foreground">
               Remembered your password?{" "}
               <Link
