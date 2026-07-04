@@ -16,9 +16,10 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy.WithOrigins(
-                    "http://localhost:5173", 
+                    "http://localhost:5173",
                     "http://localhost:5174",
-                    "https://second-hand-car-selling.vercel.app/"
+                    "https://second-hand-car-selling.vercel.app",            
+                    "https://autopremium-second-hand-car-selling.vercel.app" 
                    )
                    .AllowAnyHeader()
                    .AllowAnyMethod();

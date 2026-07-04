@@ -1,16 +1,7 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\SecondHandCarSelling",
-    "\\SecondHandCarSelling\\Controllers",
-    "\\SecondHandCarSelling\\Data",
-    "\\SecondHandCarSelling\\Migrations",
-    "\\SecondHandCarSelling\\Models",
-    "\\SecondHandCarSelling\\Services",
-    "\\SecondHandCarSelling\\Validators",
-    "\\SecondHandCarSelling\\wwwroot",
-    "\\SecondHandCarSelling\\wwwroot\\Files"
+    ""
   ],
-  "SelectedNode": "\\SecondHandCarSelling\\Services\\TokenService.cs",
+  "SelectedNode": "\\Program.cs",
   "PreviewInSolutionExplorer": false
 }
