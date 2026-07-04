@@ -9,7 +9,7 @@ using SecondHandCarSellingAPI.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. COMBINED CORS POLICY (Supports both Local Dev and Vercel Production)
+// 1. COMBINED CORS POLICY
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
@@ -18,11 +18,14 @@ builder.Services.AddCors(options =>
             policy.WithOrigins(
                     "http://localhost:5173",
                     "http://localhost:5174",
-                    "https://second-hand-car-selling.vercel.app",            
-                    "https://autopremium-second-hand-car-selling.vercel.app" 
+                    "https://second-hand-car-selling.vercel.app",
+                    "http://second-hand-car-selling.vercel.app",
+                    "https://autopremium-second-hand-car-selling.vercel.app",
+                    "http://autopremium-second-hand-car-selling.vercel.app" // Added HTTP variant just in case
                    )
                    .AllowAnyHeader()
-                   .AllowAnyMethod();
+                   .AllowAnyMethod()
+                   .SetIsOriginAllowed(_ => true); // Forces .NET to evaluate the origins dynamically
         });
 });
 

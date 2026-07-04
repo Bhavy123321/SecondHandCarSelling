@@ -1,11 +1,11 @@
 import axios from "axios";
 
 // Fallback to the production URL if the Vite environment variable isn't set
-// const API_BASE_URL = import.meta.env.VITE_API_URL || "https://autopremium-yaip.onrender.com";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "https://autopremium-yaip.onrender.com/api";
 // Ensure /api is at the end of the base URL if your backend routes require it
-const API_BASE_URL = import.meta.env.VITE_API_URL
-  ? `${import.meta.env.VITE_API_URL}/api`
-  : "https://autopremium-yaip.onrender.com/api";
+// const API_BASE_URL = import.meta.env.VITE_API_URL
+//   ? `${import.meta.env.VITE_API_URL}/api`
+//   : "https://autopremium-yaip.onrender.com/api";
 
 // 1. Properly initialize the axios instance using the base URL
 const api = axios.create({
