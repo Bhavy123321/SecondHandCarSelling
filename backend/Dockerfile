@@ -6,17 +6,18 @@ WORKDIR /app
 COPY *.csproj ./
 RUN dotnet restore
 
-# 3. Copy the remaining backend files and build the release
+# 3. Copy the remaining backend files
 COPY . ./
-RUN dotnet publish -c Release -o out
 
-# 4. Build the final .NET 10.0 runtime image
+# 4. Explicitly publish the specific csproj file to avoid solution path mapping issues
+RUN dotnet publish SecondHandCarSelling.csproj -c Release -o out
+
+# 5. Build the final .NET 10.0 runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /app
 COPY --from=build-env /app/out .
 
-# 5. Tell .NET to listen on the dynamic port Render provides
+# 6. Tell .NET to listen on the dynamic port Render provides
 ENV ASPNETCORE_URLS=http://*:${PORT}
 
-# 6. Run the API (Ensure this matches your actual .csproj name)
 ENTRYPOINT ["dotnet", "SecondHandCarSelling.dll"]
