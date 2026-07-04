@@ -1,8 +1,9 @@
 import axios from "axios";
 
-const api = axios.create({
-  baseURL: "http://localhost:5197/api", // Check the port from backend launchSettings
-});
+// const api = axios.create({
+//   baseURL: "http://localhost:5197/api", // Check the port from backend launchSettings
+// });
+const API_BASE_URL = import.meta.env.VITE_API_URL || "https://autopremium-yaip.onrender.com"
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
