@@ -4,6 +4,7 @@ import { Plus, Edit, Trash2, Tag, Flag, AlertCircle, X } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
+
 import {
     Card,
     CardHeader,
@@ -127,7 +128,7 @@ const AdminSettings = () => {
             return;
         }
 
-        const endpoint = isBrand ? "/CarBrands" : "/CarStatus";
+        const endpoint = activeTab === "brands" ? "/CarBrands" : "/CarStatus";
 
         try {
             await api.delete(`${endpoint}/${id}`);
@@ -156,9 +157,9 @@ const AdminSettings = () => {
     const entityLabel = isBrand ? "Brand" : "Status";
 
     return (
-        <div className="space-y-6 animate-in fade-in duration-300">
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-500">
             <div>
-                <h1 className="text-3xl font-black tracking-tight">System Settings</h1>
+                <h1 className="text-3xl font-black tracking-tight bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">System Settings</h1>
                 <p className="text-muted-foreground">Manage platform reference data like vehicle brands and statuses.</p>
             </div>
 

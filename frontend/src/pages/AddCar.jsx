@@ -124,7 +124,7 @@ const AddCar = () => {
     }
   };
 
-  const selectedBrandName = brands.find(b => b.id == formData.brandId)?.name || "Luxury Brand";
+  const selectedBrandName = brands.find(b => b.id === Number(formData.brandId))?.name || "Luxury Brand";
   const previewCar = {
     brandName: selectedBrandName,
     model: formData.model || "Model Name",
@@ -134,7 +134,7 @@ const AddCar = () => {
     fuelType: formData.fuelType,
     transmission: formData.transmission,
     imageUrl: formData.imageUrl,
-    statusName: statuses.find(s => s.id == formData.statusId)?.name || "Available",
+    statusName: statuses.find(s => s.id === Number(formData.statusId))?.name || "Available",
   };
 
   return (
@@ -161,7 +161,7 @@ const AddCar = () => {
             <Card className="shadow-md bg-card/45 border-border/40 premium-glow-primary">
               <CardHeader className="pb-3 border-b border-border/40">
                 <CardTitle className="text-base font-bold flex items-center gap-2 text-foreground/90">
-                  <Sparkles className="h-4.5 w-4.5 text-primary" />
+                  <Sparkles className="h-[18px] w-[18px] text-primary" />
                   Vehicle Identification
                 </CardTitle>
                 <CardDescription className="text-xs">Provide core specifications of the car.</CardDescription>
@@ -211,7 +211,7 @@ const AddCar = () => {
             <Card className="shadow-md bg-card/45 border-border/40">
               <CardHeader className="pb-3 border-b border-border/40">
                 <CardTitle className="text-base font-bold flex items-center gap-2 text-foreground/90">
-                  <Info className="h-4.5 w-4.5 text-primary" />
+                  <Info className="h-[18px] w-[18px] text-primary" />
                   Specifications & Price
                 </CardTitle>
                 <CardDescription className="text-xs">Detail the running mechanics and pricing parameters.</CardDescription>
@@ -287,7 +287,7 @@ const AddCar = () => {
             <Card className="shadow-md bg-card/45 border-border/40">
               <CardHeader className="pb-3 border-b border-border/40">
                 <CardTitle className="text-base font-bold flex items-center gap-2 text-foreground/90">
-                  <LinkIcon className="h-4.5 w-4.5 text-primary" />
+                  <LinkIcon className="h-[18px] w-[18px] text-primary" />
                   Seller Details & Description
                 </CardTitle>
                 <CardDescription className="text-xs">How can potential buyers contact you?</CardDescription>

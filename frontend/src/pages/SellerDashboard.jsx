@@ -103,7 +103,7 @@ const SellerDashboard = () => {
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{title}</CardTitle>
             <div className={`p-2 rounded-xl border ${colorClasses[color]}`}>
-              <Icon className="h-4.5 w-4.5" />
+              <Icon className="h-[18px] w-[18px]" />
             </div>
           </CardHeader>
           <CardContent className="pt-2">
@@ -140,7 +140,7 @@ const SellerDashboard = () => {
         </div>
         <Link to="/sell">
           <Button className="gap-2 font-bold shadow-lg">
-            <Plus className="h-4.5 w-4.5" />
+            <Plus className="h-[18px] w-[18px]" />
             Add New Listing
           </Button>
         </Link>
@@ -183,7 +183,7 @@ const SellerDashboard = () => {
           <CardHeader className="flex flex-row items-center justify-between border-b border-border/40 pb-4">
             <div>
               <CardTitle className="text-base font-bold flex items-center gap-2">
-                <Sparkles className="h-4.5 w-4.5 text-primary" />
+                <Sparkles className="h-[18px] w-[18px] text-primary" />
                 Recent Inventory Listings
               </CardTitle>
               <CardDescription className="text-xs">Your most recently updated car listings.</CardDescription>

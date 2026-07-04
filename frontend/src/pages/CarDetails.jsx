@@ -30,11 +30,11 @@ const CarDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const isOwner = user && car && user.userId == car.userId;
+  const isOwner = user && car && Number(user.userId) === Number(car.userId);
   const canBuy =
     user &&
     car &&
-    user.userId != car.userId &&
+    Number(user.userId) !== Number(car.userId) &&
     car.statusName === "Available" &&
     user.role !== "Admin";
 

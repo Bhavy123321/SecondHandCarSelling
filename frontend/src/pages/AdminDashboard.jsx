@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../services/api";
-import { Users, Car, TrendingUp, Package, ArrowRight, Sparkles, Shield } from "lucide-react";
+import { Users, Car, TrendingUp, Package, Sparkles, Shield } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -58,7 +58,7 @@ const AdminDashboard = () => {
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{title}</CardTitle>
             <div className={`p-2 rounded-xl border ${colorClasses[color]}`}>
-              <Icon className="h-4.5 w-4.5" />
+              <Icon className="h-[18px] w-[18px]" />
             </div>
           </CardHeader>
           <CardContent className="pt-2">
@@ -125,7 +125,7 @@ const AdminDashboard = () => {
         <Card className="col-span-4 border border-border/40 bg-card/65 dark:bg-slate-900/40 backdrop-blur-md">
           <CardHeader className="border-b border-border/40 pb-4">
             <CardTitle className="text-base font-bold flex items-center gap-2">
-              <Sparkles className="h-4.5 w-4.5 text-primary" />
+              <Sparkles className="h-[18px] w-[18px] text-primary" />
               Administrative Actions
             </CardTitle>
             <CardDescription className="text-xs">
@@ -158,7 +158,7 @@ const AdminDashboard = () => {
         <Card className="col-span-3 border border-border/40 bg-card/65 dark:bg-slate-900/40 backdrop-blur-md">
           <CardHeader className="border-b border-border/40 pb-4">
             <CardTitle className="text-base font-bold flex items-center gap-2">
-              <Shield className="h-4.5 w-4.5 text-primary" />
+              <Shield className="h-[18px] w-[18px] text-primary" />
               Recent System Activity
             </CardTitle>
             <CardDescription className="text-xs">Latest administrative actions.</CardDescription>

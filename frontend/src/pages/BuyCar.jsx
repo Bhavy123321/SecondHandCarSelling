@@ -2,11 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../services/api";
 import {
-  DollarSign,
   Check,
   ArrowLeft,
   ShieldCheck,
-  CreditCard,
+  Car,
 } from "lucide-react";
 import {
   Card,
@@ -14,13 +13,13 @@ import {
   CardTitle,
   CardContent,
   CardDescription,
-  CardFooter,
 } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Select } from "../components/ui/select";
 import { Label } from "../components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "../components/ui/alert";
 import { Skeleton } from "../components/ui/skeleton";
+import { motion } from "framer-motion";
 
 const BuyCar = () => {
   const { id } = useParams();
@@ -57,15 +56,13 @@ const BuyCar = () => {
         purchasePrice: car.price,
         paymentMethod,
       });
-
-      // Success - redirect to purchases
       navigate("/my-purchases");
     } catch (error) {
       console.error("Purchase error:", error);
       const errorMsg =
         error.response?.data?.message ||
         "Failed to complete purchase. Please try again.";
-      alert(errorMsg); // Using alert for now as immediate feedback, could be a toast
+      alert(errorMsg);
     } finally {
       setPurchasing(false);
     }
@@ -73,9 +70,9 @@ const BuyCar = () => {
 
   if (loading)
     return (
-      <div className="max-w-xl mx-auto py-12 space-y-4">
+      <div className="max-w-xl mx-auto py-12 space-y-6">
         <Skeleton className="h-8 w-2/3" />
-        <Skeleton className="h-[400px] w-full rounded-xl" />
+        <Skeleton className="h-[400px] w-full rounded-2xl" />
       </div>
     );
 
@@ -90,110 +87,104 @@ const BuyCar = () => {
     );
 
   return (
-    <div className="max-w-xl mx-auto py-8">
+    <div className="max-w-xl mx-auto py-6 animate-in fade-in slide-in-from-bottom-3 duration-500">
       <Button
         variant="ghost"
         onClick={() => navigate(-1)}
-        className="mb-6 gap-2 pl-0"
+        className="mb-6 gap-2 pl-0 hover:bg-transparent hover:text-primary"
       >
         <ArrowLeft className="h-4 w-4" /> Back
       </Button>
 
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-black mb-2">Checkout</h1>
-          <p className="text-muted-foreground">
-            Complete your purchase securely.
-          </p>
+          <h1 className="text-3xl font-black tracking-tight bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">Checkout</h1>
+          <p className="text-muted-foreground text-sm">Complete your purchase securely.</p>
         </div>
 
-        <Card className="overflow-hidden">
-          <div className="h-48 bg-muted relative">
-            {car.imageUrl ? (
-              <img
-                src={car.imageUrl}
-                alt={car.title}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="flex items-center justify-center h-full text-muted-foreground">
-                No Image Available
-              </div>
-            )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
-              <div className="text-white">
-                <h3 className="font-bold text-xl">
-                  {car.brandName} {car.model}
-                </h3>
-                <p className="opacity-90">{car.title}</p>
-              </div>
-            </div>
-          </div>
-
-          <CardContent className="p-6 space-y-6">
-            <div className="space-y-3 pb-6 border-b border-border">
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Vehicle Price</span>
-                <span className="font-medium">
-                  ${car.price?.toLocaleString()}
-                </span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">
-                  Taxes & Fees (Est.)
-                </span>
-                <span className="font-medium">$0.00</span>
-              </div>
-              <div className="flex justify-between items-center text-lg font-bold border-t pt-3 mt-3">
-                <span>Total Due</span>
-                <span className="text-primary text-2xl">
-                  ${car.price?.toLocaleString()}
-                </span>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          <Card className="overflow-hidden border border-border/40 shadow-xl backdrop-blur-md bg-card/80">
+            <div className="h-52 bg-muted relative overflow-hidden">
+              {car.imageUrl ? (
+                <img
+                  src={car.imageUrl}
+                  alt={car.title}
+                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                />
+              ) : (
+                <div className="flex items-center justify-center h-full text-muted-foreground">
+                  <Car className="h-12 w-12 opacity-20" />
+                </div>
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex items-end p-6">
+                <div className="text-white">
+                  <h3 className="font-bold text-2xl">{car.brandName} {car.model}</h3>
+                  <p className="opacity-80 text-sm">{car.title}</p>
+                </div>
               </div>
             </div>
 
-            <form onSubmit={handlePurchase} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="payment">Payment Method</Label>
-                <select
-                  id="payment"
-                  value={paymentMethod}
-                  onChange={(e) => setPaymentMethod(e.target.value)}
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            <CardContent className="p-6 space-y-6">
+              <div className="space-y-4 pb-6 border-b border-border/40">
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Vehicle Price</span>
+                  <span className="font-bold text-foreground">${car.price?.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Taxes & Fees (Est.)</span>
+                  <span className="font-bold text-foreground">$0.00</span>
+                </div>
+                <div className="flex justify-between items-center text-lg font-bold border-t border-border/40 pt-4 mt-4">
+                  <span>Total Due</span>
+                  <span className="text-primary text-3xl font-black">${car.price?.toLocaleString()}</span>
+                </div>
+              </div>
+
+              <form onSubmit={handlePurchase} className="space-y-5">
+                <div className="space-y-2">
+                  <Label htmlFor="payment" className="text-xs font-semibold text-foreground/80">Payment Method</Label>
+                  <Select
+                    id="payment"
+                    value={paymentMethod}
+                    onChange={(e) => setPaymentMethod(e.target.value)}
+                  >
+                    <option value="Cash">Cash Payment</option>
+                    <option value="Bank Transfer">Bank Transfer</option>
+                    <option value="Credit Card">Credit Card</option>
+                    <option value="Financing">Financing</option>
+                  </Select>
+                </div>
+
+                <Alert className="bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-900 text-blue-800 dark:text-blue-300 rounded-xl">
+                  <ShieldCheck className="h-4 w-4" />
+                  <AlertTitle>Secure Transaction</AlertTitle>
+                  <AlertDescription className="text-xs mt-1">
+                    Your purchase is protected. By confirming, you agree to our terms of service.
+                  </AlertDescription>
+                </Alert>
+
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="w-full text-lg h-12 font-bold shadow-lg"
+                  disabled={purchasing}
                 >
-                  <option value="Cash">Cash Payment</option>
-                  <option value="Bank Transfer">Bank Transfer</option>
-                  <option value="Credit Card">Credit Card</option>
-                  <option value="Financing">Financing</option>
-                </select>
-              </div>
-
-              <Alert className="bg-blue-50 dark:bg-blue-900/20 border-blue-100 dark:border-blue-900 text-blue-800 dark:text-blue-300">
-                <ShieldCheck className="h-4 w-4" />
-                <AlertTitle>Secure Transaction</AlertTitle>
-                <AlertDescription className="text-xs mt-1">
-                  Your purchase is protected. By confirming, you agree to our
-                  terms of service.
-                </AlertDescription>
-              </Alert>
-
-              <Button
-                type="submit"
-                size="lg"
-                className="w-full text-lg h-12"
-                disabled={purchasing}
-              >
-                {purchasing ? (
-                  <>Processing...</>
-                ) : (
-                  <>
-                    Confirm Purchase <Check className="ml-2 h-5 w-5" />
-                  </>
-                )}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+                  {purchasing ? (
+                    <span className="flex items-center gap-2">Processing...</span>
+                  ) : (
+                    <span className="flex items-center gap-2">
+                      Confirm Purchase <Check className="h-5 w-5" />
+                    </span>
+                  )}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </motion.div>
       </div>
     </div>
   );

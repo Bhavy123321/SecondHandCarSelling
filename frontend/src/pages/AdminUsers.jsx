@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../services/api";
-import { Trash2, UserCircle, Shield, Search, Plus, X, Pencil } from "lucide-react";
+import { Trash2, UserCircle, Search, Plus, X, Pencil } from "lucide-react";
 import { Button } from "../components/ui/button";
 import {
   Table,
@@ -19,6 +19,7 @@ import {
   CardDescription,
 } from "../components/ui/card";
 import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
 import { Select } from "../components/ui/select";
 import { Skeleton } from "../components/ui/skeleton";
 
@@ -172,10 +173,10 @@ const AdminUsers = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-500">
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black tracking-tight">
+          <h1 className="text-3xl font-black tracking-tight bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">
             User Management
           </h1>
           <p className="text-muted-foreground">
@@ -268,7 +269,7 @@ const AdminUsers = () => {
                                 handleDelete(user.userId, user.userName)
                               }
                               title="Delete User"
-                              disabled={user.role === "Admin" && user.userName === "admin"} // Prevent deleting root admin
+                              disabled={user.role === "Admin"}
                             >
                               <Trash2 className="h-4 w-4" />
                             </Button>

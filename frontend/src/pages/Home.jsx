@@ -67,7 +67,7 @@ const Home = () => {
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
           <Input
             placeholder="Search..."
-            className="pl-9.5 h-10"
+            className="pl-[38px] h-10"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -166,7 +166,7 @@ const Home = () => {
             <Input
               type="text"
               placeholder="Search make, model..."
-              className="pl-9.5 bg-card/40"
+              className="pl-[38px] bg-card/40"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />

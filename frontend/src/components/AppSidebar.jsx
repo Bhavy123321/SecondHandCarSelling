@@ -10,7 +10,6 @@ import {
   List,
   Settings,
   LogOut,
-  Shield,
   Users,
   Package,
 } from "lucide-react";

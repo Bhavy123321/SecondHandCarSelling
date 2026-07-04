@@ -58,8 +58,7 @@ const CarCard = ({ car }) => {
           </div>
           <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-muted/50">
             <Gauge className="h-4 w-4 mb-1 text-primary/70" />
-            {/* Assuming mileage might be added later, keeping placeholder or remove */}
-            <span>km</span>
+            <span>{car.mileage?.toLocaleString() || "—"} km</span>
           </div>
         </div>
       </CardContent>

@@ -40,7 +40,6 @@ const ForgotPassword = () => {
 
       if (response.status === 200) {
         setSuccess(true);
-        setTimeout(() => navigate("/login"), 3000);
       }
     } catch (err) {
       if (err.response && err.response.data) {
@@ -97,8 +96,9 @@ const ForgotPassword = () => {
                   <CheckCircle2 className="h-4 w-4 text-green-600 dark:text-green-400" />
                   <AlertTitle className="text-sm font-semibold">Success</AlertTitle>
                   <AlertDescription className="text-xs">
-                    Password reset successfully. Redirecting...
-                  </AlertDescription>
+                  Password reset successfully!{" "}
+                  <Link to="/login" className="font-bold underline underline-offset-2">Sign in now</Link>
+                </AlertDescription>
                 </Alert>
               )}
               <div className="space-y-1.5">
