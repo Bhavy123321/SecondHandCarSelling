@@ -31,8 +31,12 @@ builder.Services.AddFluentValidationClientsideAdapters();
 builder.Services.AddControllers();
 
 // Register DbContext
+// builder.Services.AddDbContext<CarSellingDbContext>(options =>
+//     options.UseSqlServer(builder.Configuration.GetConnectionString("myconnecion")));
+
+// PostgreSQL registration:
 builder.Services.AddDbContext<CarSellingDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("myconnecion")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("myconnecion")));
 
 // File service registration
 builder.Services.AddScoped<IFileService, FileService>();
