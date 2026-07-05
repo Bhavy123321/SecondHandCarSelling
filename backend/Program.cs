@@ -9,41 +9,14 @@ using SecondHandCarSellingAPI.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. COMBINED CORS POLICY
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowFrontend",
-        policy =>
-        {
-            policy.WithOrigins(
-                    "http://localhost:5173",
-                    "http://localhost:5174",
-                    "https://second-hand-car-selling.vercel.app",
-                    "http://second-hand-car-selling.vercel.app",
-                    "https://autopremium-second-hand-car-selling.vercel.app",
-                    "http://autopremium-second-hand-car-selling.vercel.app" // Added HTTP variant just in case
-                   )
-                   .AllowAnyHeader()
-                   .AllowAnyMethod()
-                   .SetIsOriginAllowed(_ => true); // Forces .NET to evaluate the origins dynamically
-        });
-});
-
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
 
 builder.Services.AddControllers();
 
 // Register DbContext
-// builder.Services.AddDbContext<CarSellingDbContext>(options =>
-//     options.UseSqlServer(builder.Configuration.GetConnectionString("myconnecion")));
-
-var cs = builder.Configuration.GetConnectionString("myconnecion");
-Console.WriteLine($"Connection String: {cs}");
-
-// PostgreSQL registration:
 builder.Services.AddDbContext<CarSellingDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("myconnecion")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("myconnection")));
 
 // File service registration
 builder.Services.AddScoped<IFileService, FileService>();
@@ -142,24 +115,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
-// Automatically apply database migrations on startup
-// Force apply raw migrations directly to your Render PostgreSQL instance on startup
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    try
-    {
-        var context = services.GetRequiredService<CarSellingDbContext>();
-        
-        // This inspects your Migrations folder and forces them into the remote database
-        context.Database.Migrate(); 
-    }
-    catch (Exception ex)
-    {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "Database migration failed during startup application lifecycle execution.");
-    }
-}
 
 app.Run();
