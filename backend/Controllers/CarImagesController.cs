@@ -7,8 +7,8 @@ using SecondHandCarSellingAPI.Models;
 
 namespace SecondHandCarSellingAPI.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class CarImagesController : ControllerBase
     {
         private readonly CarSellingDbContext _context;

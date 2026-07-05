@@ -38,6 +38,9 @@ builder.Services.AddControllers();
 // builder.Services.AddDbContext<CarSellingDbContext>(options =>
 //     options.UseSqlServer(builder.Configuration.GetConnectionString("myconnecion")));
 
+var cs = builder.Configuration.GetConnectionString("myconnecion");
+Console.WriteLine($"Connection String: {cs}");
+
 // PostgreSQL registration:
 builder.Services.AddDbContext<CarSellingDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("myconnecion")));
@@ -158,8 +161,5 @@ using (var scope = app.Services.CreateScope())
         logger.LogError(ex, "Database migration failed during startup application lifecycle execution.");
     }
 }
-
-app.Run();
-
 
 app.Run();

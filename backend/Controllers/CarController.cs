@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SecondHandCarSellingAPI.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class CarController : ControllerBase
     {
         private readonly CarSellingDbContext _context;
