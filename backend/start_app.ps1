@@ -1,4 +1,4 @@
-$backend = Start-Process -FilePath "dotnet" -ArgumentList "run" -WorkingDirectory "f:\Laptop\Desktop\SecondHandCarSelling\SecondHandCarSelling\SecondHandCarSelling" -PassThru
+$backend = Start-Process -FilePath "dotnet" -ArgumentList "run" -WorkingDirectory "F:\Laptop\Desktop\SecondHandCarSelling\backend" -PassThru
 Write-Host "Backend started with PID: $($backend.Id)"
 
 $frontend = Start-Process -FilePath "npm" -ArgumentList "run dev" -WorkingDirectory "f:\Laptop\Desktop\SecondHandCarSelling\frontend" -PassThru

@@ -108,29 +108,29 @@ GO
 PRINT 'Seeding cars...';
 
 -- Cars from vishvas (UserId = 4) - Mix of Available and Sold
-INSERT INTO Car (UserId, BrandId, StatusId, Title, Model, Year, Price, Mileage, FuelType, Transmission, Description, ContactNumber, CreatedDate, ModifiedDate) VALUES
-(4, 1, 1, 'Luxury BMW X5 in Excellent Condition', 'X5', 2021, 45000, 25000, 'Petrol', 'Automatic', 'Premium luxury SUV with full service history. Loaded with features including panoramic sunroof, leather interior, and advanced safety systems.', '+91 98765 43210', GETDATE(), GETDATE()),
-(4, 2, 1, 'Audi A4 Premium Sedan', 'A4', 2020, 32000, 35000, 'Diesel', 'Automatic', 'Elegant sedan with exceptional fuel efficiency. Well-maintained with all service records available.', '+91 98765 43210', GETDATE(), GETDATE()),
-(4, 3, 2, 'Mercedes C-Class - SOLD', 'C-Class', 2019, 38000, 40000, 'Petrol', 'Automatic', 'Sophisticated luxury sedan with premium features. This car has been sold.', '+91 98765 43210', GETDATE(), GETDATE());
+INSERT INTO Car (UserId, BrandId, ImageId, StatusId, Title, Model, Year, Price, Mileage, FuelType, Transmission, Description, ContactNumber, CreatedDate, ModifiedDate) VALUES
+(4, 1, 1, 1, 'Luxury BMW X5 in Excellent Condition', 'X5', 2021, 45000, 25000, 'Petrol', 'Automatic', 'Premium luxury SUV with full service history. Loaded with features including panoramic sunroof, leather interior, and advanced safety systems.', '+91 98765 43210', GETDATE(), GETDATE()),
+(4, 2, 1, 1, 'Audi A4 Premium Sedan', 'A4', 2020, 32000, 35000, 'Diesel', 'Automatic', 'Elegant sedan with exceptional fuel efficiency. Well-maintained with all service records available.', '+91 98765 43210', GETDATE(), GETDATE()),
+(4, 3, 1, 2, 'Mercedes C-Class - SOLD', 'C-Class', 2019, 38000, 40000, 'Petrol', 'Automatic', 'Sophisticated luxury sedan with premium features. This car has been sold.', '+91 98765 43210', GETDATE(), GETDATE());
 
 -- Cars from krish (UserId = 5) - All Available
-INSERT INTO Car (UserId, BrandId, StatusId, Title, Model, Year, Price, Mileage, FuelType, Transmission, Description, ContactNumber, CreatedDate, ModifiedDate) VALUES
-(5, 4, 1, 'Tesla Model 3 Electric - Like New', 'Model 3', 2022, 52000, 15000, 'Electric', 'Automatic', 'Cutting-edge electric vehicle with autopilot. Minimal mileage, barely driven. Comes with all original accessories.', '+91 98765 43211', GETDATE(), GETDATE()),
-(5, 5, 1, 'Porsche 911 Sports Car', '911', 2020, 85000, 20000, 'Petrol', 'Manual', 'Iconic sports car in pristine condition. Perfect for enthusiasts. Never been in an accident.', '+91 98765 43211', GETDATE(), GETDATE());
+INSERT INTO Car (UserId, BrandId, ImageId, StatusId, Title, Model, Year, Price, Mileage, FuelType, Transmission, Description, ContactNumber, CreatedDate, ModifiedDate) VALUES
+(5, 4, 1, 1, 'Tesla Model 3 Electric - Like New', 'Model 3', 2022, 52000, 15000, 'Electric', 'Automatic', 'Cutting-edge electric vehicle with autopilot. Minimal mileage, barely driven. Comes with all original accessories.', '+91 98765 43211', GETDATE(), GETDATE()),
+(5, 5, 1, 1, 'Porsche 911 Sports Car', '911', 2020, 85000, 20000, 'Petrol', 'Manual', 'Iconic sports car in pristine condition. Perfect for enthusiasts. Never been in an accident.', '+91 98765 43211', GETDATE(), GETDATE());
 
 -- Cars from arjun (UserId = 6) - Mix
-INSERT INTO Car (UserId, BrandId, StatusId, Title, Model, Year, Price, Mileage, FuelType, Transmission, Description, ContactNumber, CreatedDate, ModifiedDate) VALUES
-(6, 1, 1, 'BMW 3 Series - Great Deal', '3 Series', 2019, 28000, 45000, 'Diesel', 'Automatic', 'Reliable and efficient. Perfect daily driver with great fuel economy.', '+91 98765 43212', GETDATE(), GETDATE()),
-(6, 2, 1, 'Audi Q7 Family SUV', 'Q7', 2021, 55000, 30000, 'Diesel', 'Automatic', 'Spacious 7-seater SUV perfect for families. Premium interior and entertainment system.', '+91 98765 43212', GETDATE(), GETDATE()),
-(6, 3, 1, 'Mercedes E-Class Executive', 'E-Class', 2020, 48000, 28000, 'Hybrid', 'Automatic', 'Hybrid luxury sedan with excellent fuel efficiency. Executive comfort at its finest.', '+91 98765 43212', GETDATE(), GETDATE());
+INSERT INTO Car (UserId, BrandId, ImageId, StatusId, Title, Model, Year, Price, Mileage, FuelType, Transmission, Description, ContactNumber, CreatedDate, ModifiedDate) VALUES
+(6, 1, 1, 1, 'BMW 3 Series - Great Deal', '3 Series', 2019, 28000, 45000, 'Diesel', 'Automatic', 'Reliable and efficient. Perfect daily driver with great fuel economy.', '+91 98765 43212', GETDATE(), GETDATE()),
+(6, 2, 1, 1, 'Audi Q7 Family SUV', 'Q7', 2021, 55000, 30000, 'Diesel', 'Automatic', 'Spacious 7-seater SUV perfect for families. Premium interior and entertainment system.', '+91 98765 43212', GETDATE(), GETDATE()),
+(6, 3, 1, 1, 'Mercedes E-Class Executive', 'E-Class', 2020, 48000, 28000, 'Hybrid', 'Automatic', 'Hybrid luxury sedan with excellent fuel efficiency. Executive comfort at its finest.', '+91 98765 43212', GETDATE(), GETDATE());
 
 -- Additional cars with different brands
-INSERT INTO Car (UserId, BrandId, StatusId, Title, Model, Year, Price, Mileage, FuelType, Transmission, Description, ContactNumber, CreatedDate, ModifiedDate) VALUES
-(4, 6, 1, 'Toyota Camry Reliable Sedan', 'Camry', 2020, 24000, 35000, 'Petrol', 'Automatic', 'Extremely reliable family sedan. Low maintenance costs and excellent fuel economy.', '+91 98765 43210', GETDATE(), GETDATE()),
-(5, 7, 1, 'Honda Civic Sport', 'Civic', 2021, 26000, 20000, 'Petrol', 'Automatic', 'Sporty compact car with modern tech features. Great for city driving.', '+91 98765 43211', GETDATE(), GETDATE()),
-(6, 8, 1, 'Ford Mustang GT', 'Mustang', 2019, 42000, 30000, 'Petrol', 'Manual', 'American muscle car with powerful V8 engine. Thrilling driving experience.', '+91 98765 43212', GETDATE(), GETDATE()),
-(4, 10, 1, 'Volkswagen Golf GTI', 'Golf', 2020, 28000, 25000, 'Petrol', 'Automatic', 'Hot hatch with sporty handling and practical interior. Fun daily driver.', '+91 98765 43210', GETDATE(), GETDATE()),
-(5, 14, 1, 'Lexus RX Luxury SUV', 'RX', 2021, 48000, 22000, 'Hybrid', 'Automatic', 'Premium hybrid SUV with exceptional comfort and reliability.', '+91 98765 43211', GETDATE(), GETDATE());
+INSERT INTO Car (UserId, BrandId, ImageId, StatusId, Title, Model, Year, Price, Mileage, FuelType, Transmission, Description, ContactNumber, CreatedDate, ModifiedDate) VALUES
+(4, 6, 1, 1, 'Toyota Camry Reliable Sedan', 'Camry', 2020, 24000, 35000, 'Petrol', 'Automatic', 'Extremely reliable family sedan. Low maintenance costs and excellent fuel economy.', '+91 98765 43210', GETDATE(), GETDATE()),
+(5, 7, 1, 1, 'Honda Civic Sport', 'Civic', 2021, 26000, 20000, 'Petrol', 'Automatic', 'Sporty compact car with modern tech features. Great for city driving.', '+91 98765 43211', GETDATE(), GETDATE()),
+(6, 8, 1, 1, 'Ford Mustang GT', 'Mustang', 2019, 42000, 30000, 'Petrol', 'Manual', 'American muscle car with powerful V8 engine. Thrilling driving experience.', '+91 98765 43212', GETDATE(), GETDATE()),
+(4, 10, 1, 1, 'Volkswagen Golf GTI', 'Golf', 2020, 28000, 25000, 'Petrol', 'Automatic', 'Hot hatch with sporty handling and practical interior. Fun daily driver.', '+91 98765 43210', GETDATE(), GETDATE()),
+(5, 14, 1, 1, 'Lexus RX Luxury SUV', 'RX', 2021, 48000, 22000, 'Hybrid', 'Automatic', 'Premium hybrid SUV with exceptional comfort and reliability.', '+91 98765 43211', GETDATE(), GETDATE());
 
 PRINT 'Cars seeded (12 cars total).';
 GO
@@ -155,40 +155,40 @@ GO
 -- STEP 6: SEED CAR IMAGES (using picsum.photos)
 -- =============================================
 
-PRINT 'Seeding car images with picsum.photos URLs...';
+PRINT 'Seeding car images with real car photos...';
 
--- Insert images for each car using different picsum.photos IDs
+-- Insert images for each car using real car images
 INSERT INTO CarImages (CarId, ImageUrl, CreatedDate, ModifiedDate) VALUES
 -- Car 1: BMW X5
-(1, 'https://picsum.photos/id/237/800/600', GETDATE(), GETDATE()),
-(1, 'https://picsum.photos/id/238/800/600', GETDATE(), GETDATE()),
+(1, 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&q=80', GETDATE(), GETDATE()),
+(1, 'https://images.unsplash.com/photo-1556189250-72ba954cfc2b?w=800&q=80', GETDATE(), GETDATE()),
 -- Car 2: Audi A4
-(2, 'https://picsum.photos/id/239/800/600', GETDATE(), GETDATE()),
+(2, 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&q=80', GETDATE(), GETDATE()),
 -- Car 3: Mercedes C-Class (Sold)
-(3, 'https://picsum.photos/id/240/800/600', GETDATE(), GETDATE()),
+(3, 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800&q=80', GETDATE(), GETDATE()),
 -- Car 4: Tesla Model 3
-(4, 'https://picsum.photos/id/241/800/600', GETDATE(), GETDATE()),
-(4, 'https://picsum.photos/id/242/800/600', GETDATE(), GETDATE()),
+(4, 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=800&q=80', GETDATE(), GETDATE()),
+(4, 'https://images.unsplash.com/photo-1536700503339-0e4f1c4d0b9c?w=800&q=80', GETDATE(), GETDATE()),
 -- Car 5: Porsche 911
-(5, 'https://picsum.photos/id/243/800/600', GETDATE(), GETDATE()),
+(5, 'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=800&q=80', GETDATE(), GETDATE()),
 -- Car 6: BMW 3 Series
-(6, 'https://picsum.photos/id/244/800/600', GETDATE(), GETDATE()),
+(6, 'https://images.unsplash.com/photo-1556189250-72ba954cfc2b?w=800&q=80', GETDATE(), GETDATE()),
 -- Car 7: Audi Q7
-(7, 'https://picsum.photos/id/247/800/600', GETDATE(), GETDATE()),
+(7, 'https://images.unsplash.com/photo-1605685788552-b574f159fba5?w=800&q=80', GETDATE(), GETDATE()),
 -- Car 8: Mercedes E-Class
-(8, 'https://picsum.photos/id/248/800/600', GETDATE(), GETDATE()),
+(8, 'https://images.unsplash.com/photo-1602002418082-a4443e081dd1?w=800&q=80', GETDATE(), GETDATE()),
 -- Car 9: Toyota Camry
-(9, 'https://picsum.photos/id/249/800/600', GETDATE(), GETDATE()),
+(9, 'https://images.unsplash.com/photo-1623869675781-80aa31012a5a?w=800&q=80', GETDATE(), GETDATE()),
 -- Car 10: Honda Civic
-(10, 'https://picsum.photos/id/250/800/600', GETDATE(), GETDATE()),
+(10, 'https://images.unsplash.com/photo-1606144042614-b2417e99c67e?w=800&q=80', GETDATE(), GETDATE()),
 -- Car 11: Ford Mustang
-(11, 'https://picsum.photos/id/251/800/600', GETDATE(), GETDATE()),
+(11, 'https://images.unsplash.com/photo-1584345604476-8ec5e12e42dd?w=800&q=80', GETDATE(), GETDATE()),
 -- Car 12: VW Golf
-(12, 'https://picsum.photos/id/252/800/600', GETDATE(), GETDATE()),
+(12, 'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=800&q=80', GETDATE(), GETDATE()),
 -- Car 13: Lexus RX
-(13, 'https://picsum.photos/id/253/800/600', GETDATE(), GETDATE());
+(13, 'https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf5?w=800&q=80', GETDATE(), GETDATE());
 
-PRINT 'Car images seeded with picsum.photos URLs.';
+PRINT 'Car images seeded with real car photos.';
 GO
 
 -- =============================================

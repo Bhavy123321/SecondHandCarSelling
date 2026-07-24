@@ -11,7 +11,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+}); 
 builder.Services.AddControllers();
 
 // Register DbContext
@@ -49,7 +58,8 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = jwtSettings["Issuer"],
         ValidAudience = jwtSettings["Audience"],
-        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(key)
+        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(key),
+        ValidAlgorithms = new[] { Microsoft.IdentityModel.Tokens.SecurityAlgorithms.HmacSha256 }
     };
 });
 
@@ -101,7 +111,7 @@ var app = builder.Build();
 app.UseStaticFiles();
 
 // 2. ACTIVATE THE PIPELINE CORRECTLY
-app.UseCors("AllowFrontend");
+app.UseCors("AllowAll");
 
 // Keep Swagger visible in production for testing on Render if you like, 
 // or keep it wrapped in IsDevelopment() as you had it.

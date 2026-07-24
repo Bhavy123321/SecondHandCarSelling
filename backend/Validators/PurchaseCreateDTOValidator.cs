@@ -20,13 +20,13 @@
             // Payment Method should be restricted to specific types
             RuleFor(x => x.PaymentMethod)
                 .NotEmpty().WithMessage("Payment method is required.")
-                .Must(BeAValidPaymentMethod).WithMessage("Invalid Payment Method. Allowed: Cash, CreditCard, BankTransfer.");
+                .Must(BeAValidPaymentMethod).WithMessage("Invalid Payment Method. Allowed: Cash, Bank Transfer, Credit Card, Financing.");
         }
 
         // Custom helper to validate specific allowed values
         private bool BeAValidPaymentMethod(string method)
         {
-            var allowedMethods = new List<string> { "Cash", "CreditCard", "BankTransfer" };
+            var allowedMethods = new List<string> { "Cash", "Bank Transfer", "Credit Card", "Financing" };
             return allowedMethods.Contains(method);
         }
     }
